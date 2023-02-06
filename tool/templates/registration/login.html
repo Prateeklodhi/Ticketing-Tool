@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title  %}
+    Login
+{% endblock title %}
+{% block content %}
+    <h1>Log-in</h1>
+    {% if form.error %}
+    <p>
+        Your username or password did't match, Please try again.
+    </p>
+    {% else %}
+    <p>
+        <p> Plese, user the following form to log-in:</p>
+    </p>    
+    {% endif %}
+    <div class="row mt-2">
+        <div class="col mt-2">
+            <form action="" method="post">
+                <label for="username">Username</label>
+                <input type="text" name="username" class="input forms-input">
+                <br>
+                <hr>
+                <label for="password">Password</label>
+                <input type="password" name="password" >
+                <br>
+                <hr>
+                {{form.as_p}}
+                {% csrf_token %}
+                <input type="submit" class="btn btn-success mt-2">
+            </form>
+            <p>
+            </p>
+        
+        </div>
+    </div>
+{% endblock content %}

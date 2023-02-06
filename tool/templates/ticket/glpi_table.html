@@ -1,0 +1,32 @@
+<table class="table table-striped table-bordered" >
+    <thead>
+        <tr>
+            <th>Docket No</th>
+            <th>Citizen Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Section</th>
+            <th>Subsection</th>
+            <th>Message</th>
+            <th>Grievance Remarks</th>
+            <th>Status</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for nidan_ticket in nidan_tickets %}
+            <tr>
+                <td>{{nidan_ticket.docket_number}}</td> 
+                <td>{{nidan_ticket.citizen_name}}</td> 
+                <td>{{nidan_ticket.phone}}</td> 
+                <td>{{nidan_ticket.email}}</td> 
+                <td>{{nidan_ticket.section}}</td> 
+                <td>{{nidan_ticket.subsection}}</td> 
+                <td>{{nidan_ticket.message}}</td> 
+                <td>{{nidan_ticket.grievance_remark}}</td> 
+                <td>{{nidan_ticket.status}}</td> 
+                <td> <a href="" class="btn btn-outline-primary">Edit</a> </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

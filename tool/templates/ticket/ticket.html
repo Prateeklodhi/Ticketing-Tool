@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}
+Ticket Details
+{% endblock title %}
+{% block content %}
+<div class="row">
+    <form action="" method="Post" class="col mt-5">
+        <div class="row mt-3">
+            <div class="col mt-3">
+                <label for="{{ticket_form.first_name.is_for_label}}">
+                    {{ticket_form.first_name.label_tag}}
+                </label>
+                {{ticket_form.first_name}}
+                <br>
+                {% for error in ticket_form.errors %}
+                <span class="">
+                    {{error}}
+                </span>
+                {% endfor %}
+            </div>
+            <div class="col mt-3">
+                <label for="{{ticket_form.first_name.is_for_label}}">
+                    {{ticket_form.last_name.label_tag}}
+                </label>
+                {{ticket_form.last_name}}
+                <br>
+                {% for error in ticket_form.errors %}
+                <span class="">
+                    {{error}}
+                </span>
+                {% endfor %}
+            </div>
+            <div class="col mt-3">
+                <label for="{{ticket_form.first_name.is_for_label}}">
+                    {{ticket_form.contact.label_tag}}
+                </label>
+                {{ticket_form.contact}}
+                <br>
+                {% for error in ticket_form.errors %}
+                <span class="">
+                    {{error}}
+                </span>
+                {% endfor %}
+            </div>
+        </div>
+        <hr>
+        <div class="row mt-3">
+            <div class="col mt-3">
+                <label for="{{ticket_form.title.is_for_label}}">
+                    {{ticket_form.title.label_tag}}
+                </label>
+                {{ticket_form.title}}
+            </div>
+            <div class="col mt-3">
+                <label for="{{ticket_form.status.is_for_label}}">
+                    {{ticket_form.status.label_tag}}
+                </label>
+                {{ticket_form.status}}
+            </div>
+            <div class="col mt-3">
+                <label for="{{ticket_form.priority.is_for_label}}">
+                    {{ticket_form.priority.label_tag}}
+                </label>
+                {{ticket_form.priority}}
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-6">
+                <label for="{{ticket_form.description.is_for_label}}">
+                    {{ticket_form.description.label_tag}}
+                </label>
+                {{ticket_form.description}}
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col">
+                <label for="{{ticket_form.on_hold.is_for_label}}">
+                    {{ticket_form.on_hold.label_tag}}
+                </label>
+                {{ticket_form.on_hold}}
+            </div>
+            <div class="col">
+                <label for="{{ticket_form.image.is_for_label}}">
+                    {{ticket_form.image.label_tag}}
+                </label>
+                {{ticket_form.image}}
+            </div><br>
+            <div class="col">
+                <label for="{{ticket_form.type_of_problem.is_for_label}}">
+                    {{ticket_form.type_of_problem.label_tag}}
+                </label>
+                {{ticket_form.type_of_problem}}
+            </div>
+        </div>
+        {% csrf_token %}
+        <input type="submit" value="Submit" class="btn btn-primary">
+    </form>
+</div>
+<hr>
+{% endblock content %}
