@@ -22,12 +22,12 @@ def loginuser(request):
             login(request,user)
             return redirect('index')
         else:
-            messages.info(request,'username or password might be wrong.')
+            messages.error(request,'username or password might be wrong.')
     return render(request,'registration/login.html')
 
 
 def logoutuser(request):
-    messages.success(request,'Logout Successfull')
+    messages.success(request,'Logout Successfully')
     logout(request)
     return redirect('login')
 
@@ -50,7 +50,6 @@ def register(request):
 
 @login_required(login_url='login')
 def userSettings(request):
-    operator = request.user.operator
     form = OperatorProfile(instance = operator)
     if request.method == 'POST':
         form = OperatorProfile(request.POST,request.FILES,instance=operator)
@@ -68,7 +67,7 @@ def userSettings(request):
 def api_nidan(request):
     message_flag = None
     response_data =  None
-    if request.method=='POST':
+    if request.method=='GET':
         url = 'https://uat3.cgg.gov.in/cggrievancemmu/getDocketDetails'
         response = requests.get(url)
         data = response.json()
@@ -102,7 +101,7 @@ def api_nidan(request):
         messages.success(request,'New data is arrived')
     else:
         messages.warning(request,'All data have been fatched from the Nidan Api')
-    nidan_tickets = NidanTicket.objects.filter(status="Panding")
+    nidan_tickets = NidanTicket.objects.filter(status='pending')
     print(nidan_tickets)
     dic = {
         'nidan_tickets':nidan_tickets,
@@ -110,26 +109,44 @@ def api_nidan(request):
     return render(request,'ticket/api_html.html',dic)
 
 @login_required(login_url='login')
-def nidan_ticket_data(request):
- 
+def nidan_ticket_data(request,nidan_id):
+    nidan_ticket = NidanTicket.objects.get(id = nidan_id)
+    if request.method=='POST':
+        nidan_ticket.status = 'solved'
+        nidan_ticket.save
+        return redirect('api_nidan')
     return render(request,'ticket/api_html.html',)
 
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['operator','admin'])
 def index(request):
-    # if request.user.groups == 'admin':
-    #     tickets = Ticket.objects.all()
-    # else:
-    tickets = request.user.operator.ticket_set.all()
-    total_ticket = tickets.count()
-    ticket_open = tickets.filter(status = 1).count()
-    ticket_reopened = tickets.filter(status = 2).count()
-    ticket_resolved = tickets.filter(status = 3).count()
-    ticket_closed = tickets.filter(status= 4).count()
-    ticket_duplicate = tickets.filter(status = 5).count()
+    ticket_open= None
+    ticket_closed= None
+    total_ticket= None
+    ticket_reopened= None
+    ticket_duplicate= None
+    ticket_resolved= None     
+    print('new pritn',request.user.groups)
+    if request.user.groups == 'admin':
+        tickets = Ticket.objects.all()
+        total_ticket = tickets.count()
+        print('admin call:',total_ticket)
+        # ticket_open = tickets.filter(status = 1).count()
+        # ticket_reopened = tickets.filter(status  = 2).count()
+        # ticket_resolved = tickets.filter(status = 3).count()
+        # ticket_closed = tickets.filter(status= 4).count()
+        # ticket_duplicate = tickets.filter(status = 5).count()
+    if request.user.groups == 'operator':
+        tickets = request.user.operator.ticket_set.all()
+        total_ticket = tickets.count()
+        print('operator call:',total_ticket)
+        # ticket_open = tickets.filter(status = 1).count()
+        # ticket_reopened = tickets.filter(status = 2).count()
+        # ticket_resolved = tickets.filter(status = 3).count()
+        # ticket_closed = tickets.filter(status= 4).count()
+        # ticket_duplicate = tickets.filter(status = 5).count()
     dic = {
-        'section':'index',
         'ticket_open' : ticket_open,
         'ticket_closed' : ticket_closed,
         'total_ticket' : total_ticket,

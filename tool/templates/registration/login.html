@@ -3,16 +3,8 @@
     Login
 {% endblock title %}
 {% block content %}
+    {% include 'ticket\messages.html' %}
     <h1>Log-in</h1>
-    {% if form.error %}
-    <p>
-        Your username or password did't match, Please try again.
-    </p>
-    {% else %}
-    <p>
-        <p> Plese, user the following form to log-in:</p>
-    </p>    
-    {% endif %}
     <div class="row mt-2">
         <div class="col mt-2">
             <form action="" method="post">

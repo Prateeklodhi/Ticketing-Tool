@@ -6,19 +6,13 @@
     <br>
     <div class="col table-responsive">
         <br>    
-        <form method="POST">
-            {% csrf_token %}
-            <h2>Get New Data:</h2><input type="Submit" value="   ____Call Data____    " class="btn btn-outline-info">
-        </form>
-        <hr>
         <h3>Nidan Dockets </h3>
     </div>
        
 </div>
 <div class="row">
     <div class="col table-responsive">
-        {% include 'ticket\glpi_table.html' %}  
+        {% include 'ticket\nidan_table.html' %}  
     </div>
-    
 </div>
 {% endblock content %}

@@ -76,10 +76,9 @@ class Ticket(models.Model):
 
 
 class NidanTicket(models.Model):
-
     STATUS = (
-        ('Panding','Panding'),
-        ('Solved','Solved'),
+        ('pending',_('pending')),
+        ('solved',_('solved')),
         )
 
     docket_number = models.CharField(max_length=20,null=True,unique=True)
@@ -95,7 +94,7 @@ class NidanTicket(models.Model):
     section = models.CharField(max_length=150,null=True)
     message = models.TextField(null=True)
     subsection = models.CharField(max_length=50,null=True)
-    status = models.CharField(choices=STATUS,null=True,max_length=100,default='Panding')
+    status = models.CharField(choices=STATUS,null=True,max_length=100,default='pending')
     grievance_remark = models.CharField(max_length=500,null=True)
     callstart  = models.CharField(max_length=200,null= True)
     opuserid = models.CharField(max_length=10,null=True)
