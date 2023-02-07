@@ -7,6 +7,7 @@ urlpatterns = [
     path('logout',views.logoutuser,name='logout'),
     path('register/', views.register, name='register'),
     path('', views.index, name='index'),
+    path('nidan-data-table/<str:nidan_id>',views.nidan_ticket_data,name='nidan_data_table'),
     path('edit-profile/',views.userSettings,name='settings'),
     path('all-tickets/', views.allTicket, name='all_tickets'),
     path('create-ticket/', views.createTicket, name='create_ticket'),
