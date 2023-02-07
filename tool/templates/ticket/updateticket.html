@@ -3,7 +3,7 @@
     Update Details
 {% endblock title %}
 {% block content %}
-    <form  method="post">
+    <form  method="post" class="update_form">
         {{ticket_form.as_p}}
         {% csrf_token %}
         <input type="submit" value="Submit" class="btn btn-primary"> 
