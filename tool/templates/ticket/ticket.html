@@ -4,10 +4,10 @@ Ticket Details
 {% endblock title %}
 {% block content %}
 <div class="row">
-    <form action="" method="Post" class="col mt-5">
+    <form action="" method="Post" class="col mt-5 update_form">
         <div class="row mt-3">
-            <div class="col mt-3">
-                <label for="{{ticket_form.first_name.is_for_label}}">
+            <div class="col-12 col-lg-6 mt-3 ">
+                <label for="{{ticket_form.first_name.is_for_label}}" class="col-6">
                     {{ticket_form.first_name.label_tag}}
                 </label>
                 {{ticket_form.first_name}}
@@ -18,8 +18,8 @@ Ticket Details
                 </span>
                 {% endfor %}
             </div>
-            <div class="col mt-3">
-                <label for="{{ticket_form.first_name.is_for_label}}">
+            <div class="col-lg-6 col-12 mt-3 ">
+                <label for="{{ticket_form.first_name.is_for_label}}" class="col-6">
                     {{ticket_form.last_name.label_tag}}
                 </label>
                 {{ticket_form.last_name}}
@@ -30,8 +30,8 @@ Ticket Details
                 </span>
                 {% endfor %}
             </div>
-            <div class="col mt-3">
-                <label for="{{ticket_form.first_name.is_for_label}}">
+            <div class="mt-3 col-lg-6 col-12">
+                <label for="{{ticket_form.first_name.is_for_label}}" class="col-6">
                     {{ticket_form.contact.label_tag}}
                 </label>
                 {{ticket_form.contact}}
@@ -42,17 +42,17 @@ Ticket Details
                 </span>
                 {% endfor %}
             </div>
-        </div>
-        <hr>
-        <div class="row mt-3">
-            <div class="col mt-3">
+            <div class="col-lg-6 col-12 mt-3">
                 <label for="{{ticket_form.title.is_for_label}}">
                     {{ticket_form.title.label_tag}}
                 </label>
                 {{ticket_form.title}}
             </div>
-            <div class="col mt-3">
-                <label for="{{ticket_form.status.is_for_label}}">
+        </div>
+        <hr>
+        <div class="row mt-3">
+            <div class="col-lg-6 col-12 mt-3 ">
+                <label for="{{ticket_form.status.is_for_label}}" class="col-6">
                     {{ticket_form.status.label_tag}}
                 </label>
                 {{ticket_form.status}}
@@ -66,7 +66,7 @@ Ticket Details
         </div>
         <hr>
         <div class="row">
-            <div class="col-6">
+            <div class="col-12">
                 <label for="{{ticket_form.description.is_for_label}}">
                     {{ticket_form.description.label_tag}}
                 </label>
@@ -95,7 +95,7 @@ Ticket Details
             </div>
         </div>
         {% csrf_token %}
-        <input type="submit" value="Submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
 <hr>
