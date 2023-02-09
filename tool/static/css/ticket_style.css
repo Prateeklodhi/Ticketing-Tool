@@ -20,6 +20,7 @@ body
     outline: none;
     border: none;
     border-bottom: 1px solid;
+    border-color: rgba(0, 0, 0, 0.308);
     color: rgb(1, 1, 83);
 }
 .update_form textarea

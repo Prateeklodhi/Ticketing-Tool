@@ -74,19 +74,16 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="{% url 'settings' %}"> Edit Profile</a>
-                       
                         <a class="dropdown-item" href="{% url 'register' %}"> Register New User</a>
-                        
                         <a class="dropdown-item" href="{% url 'logout'%}"> Logout</a>
                     </div>
-                    {%else%}
+                    {% else %}
                     <a href="{% url 'login' %}">Login-in</a>
                     {% endif %}
                 </span>
             </div>
-
         </div>
-    </nav>s
+    </nav>
     <div class="container">
         {% block content %}
 

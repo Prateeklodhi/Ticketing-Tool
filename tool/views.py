@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import TicketForm, UserRegistrationForm, OperatorProfile
+from .forms import TicketForm, UserRegistrationForm, OperatorProfile,NidanForm
 from .models import Ticket,Operator,NidanTicket
 from django.contrib.auth import authenticate, login,logout
 from django.db.models import Q
@@ -20,6 +20,7 @@ def loginuser(request):
         user = authenticate(request,username=username,password=password)
         if user is not None:
             login(request,user)
+            messages.success(request,'Welcome, you have been logged in successfully.')
             return redirect('index')
         else:
             messages.error(request,'username or password might be wrong.')
@@ -32,8 +33,7 @@ def logoutuser(request):
     return redirect('login')
 
 
-@unauthorized_user
-@admin_only
+@allowed_users(allowed_roles=['admin',])
 def register(request):
     form = UserRegistrationForm()
     if request.method=='POST':
@@ -50,19 +50,23 @@ def register(request):
 
 
 @login_required(login_url='login')
-# @allowed_users(allowed_roles=['operator'])
+@allowed_users(allowed_roles=['operator'])
 def userSettings(request):
-    operator = request.user
+    operator_id = request.user.id
+    print('operator=',operator_id)
+    operator = Operator.objects.get(id=operator_id)
     form = OperatorProfile(instance = operator)
     if request.method == 'POST':
         form = OperatorProfile(request.POST,request.FILES,instance=operator)
         if form.is_valid():
             form.save()
+            messages.success(request,'Your profile has been updated successfully.')
+        else:
+            messages.error(request,'Something went wrong.')
     dic = {
         'form':form,
     }
     return render(request,'ticket/userprofile.html',dic)
-
 
 
 @login_required(login_url='login')
@@ -110,14 +114,19 @@ def api_nidan(request):
     }
     return render(request,'ticket/api_html.html',dic)
 
+
 @login_required(login_url='login')
 def nidan_ticket_data(request,nidan_id):
     nidan_ticket = NidanTicket.objects.get(id = nidan_id)
+    nidan_form = NidanForm(instance=nidan_ticket)
     if request.method=='POST':
-        nidan_ticket.status = 'solved'
-        nidan_ticket.save
-        return redirect('api_nidan')
-    return render(request,'ticket/api_html.html',)
+        nidan_form = NidanForm(request.POST,instance=nidan_ticket)
+        if nidan_form.is_valid():
+            nidan_form.save()
+    dic = {
+        'nidan_form':nidan_form
+    }
+    return render(request,'ticket/nidan_form.html',dic)
 
 
 @login_required(login_url='login')
@@ -158,8 +167,9 @@ def createTicket(request):
         ticket_form = TicketForm(request.POST)
         if ticket_form.is_valid():
             new_form =  ticket_form.save(commit=False)
-            new_form.created_by =request.user.operator
+            new_form.created_by = request.user.operator
             new_form.save()
+            messages.success(request,'Ticket created succfully for '+str(new_form.first_name+" "+new_form.last_name+'.'))
             return redirect('all_tickets')
     return render(request, 'ticket/ticket.html', {'ticket_form': ticket_form})
 
@@ -169,7 +179,7 @@ def deleteTicket(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['operator','admin'])
+@allowed_users(allowed_roles=['operator'])
 def updateTicket(request, pk):
     ticket = Ticket.objects.get(id=pk)
     ticket_form = TicketForm(instance=ticket)
@@ -177,9 +187,11 @@ def updateTicket(request, pk):
         ticket_form = TicketForm(request.POST, instance=ticket)
         if ticket_form.is_valid():
             new_form =  ticket_form.save(commit=False)
-            new_form.created_by =request.user.operator
+            new_form.created_by = request.user.operator
             new_form.save()
+            messages.success(request,'Ticket updated succfully for '+str(new_form.first_name+" "+new_form.last_name+'.'))
             return redirect('all_tickets')
+       
     return render(request, 'ticket/ticket.html', {'ticket_form': ticket_form})
 
 
