@@ -84,23 +84,18 @@ def api_nidan(request):
         response_data = data['data']
         for glpi_client in response_data:
             client = NidanTicket(
-                docket_number=glpi_client['docketNo'],
-                citizen_name=glpi_client['citizenName'],
-                phone=glpi_client['phone'],
-                address=glpi_client['address'],
-                email=glpi_client['email'],
-                district_name=glpi_client['districtName'],
-                municipality=glpi_client['municipality'],
-                colony_name=glpi_client['colonyName'],
-                house_number=glpi_client['houseNo'],
-                street_test=glpi_client['street'],
-                section=glpi_client['section'],
-                message=glpi_client['message'],
-                subsection=glpi_client['subsection'],
-                status=glpi_client['status'],
-                grievance_remark=glpi_client['grievanceRemarks'],
-                callstart=glpi_client['callStart'],
-                opuserid=glpi_client['opuserid']
+            docket_number = glpi_client['docketNo'],
+            citizen_name = glpi_client['citizenName'],
+            phone =glpi_client['phone'],
+            address =glpi_client['address']+' '+glpi_client['houseNo']+' '+ glpi_client['colonyName']+' '+glpi_client['districtName'],
+            email =glpi_client['email'],
+            municipality =glpi_client['municipality'],
+            section =glpi_client['section'],
+            message =glpi_client['message'],
+            subsection =glpi_client['subsection'],
+            status =glpi_client['status'],
+            grievance_remark =glpi_client['grievanceRemarks'],
+            callstart  =glpi_client['callStart'],
             )
             try:
                 client.save()
@@ -126,7 +121,13 @@ def nidan_ticket_data(request, nidan_id):
     if request.method == 'POST':
         nidan_form = NidanForm(request.POST, instance=nidan_ticket)
         if nidan_form.is_valid():
-            nidan_form.save()
+            new_nidan_form = nidan_form.save(commit=False)
+            if new_nidan_form.status == 'solved':
+                new_nidan_form.save()
+                messages.success(request,'Docket Number '+ str(nidan_ticket)+' is solved.')
+                return redirect('api_nidan')
+            else:
+                messages.warning(request,'No changes found.')
     dic = {
         'nidan_form': nidan_form
     }

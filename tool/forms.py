@@ -4,11 +4,15 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
-
 class NidanForm(ModelForm):
     class Meta:
         model = NidanTicket
         fields ='__all__'
+        widgets = {
+            'message':forms.Textarea(attrs={'cols': '60', 'rows': '3','description':'description'}),
+            'address':forms.Textarea(attrs={'cols': '60', 'rows': '3','description':'description'}),
+        }
+
 
 class OperatorProfile(ModelForm):
     class Meta:
