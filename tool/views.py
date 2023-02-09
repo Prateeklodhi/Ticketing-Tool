@@ -52,9 +52,8 @@ def register(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['operator'])
 def userSettings(request):
-    operator_id = request.user.id
-    print('operator=',operator_id)
-    operator = Operator.objects.get(id=operator_id)
+    operator_id = request.user
+    operator = Operator.objects.get(user=operator_id)
     form = OperatorProfile(instance = operator)
     if request.method == 'POST':
         form = OperatorProfile(request.POST,request.FILES,instance=operator)
