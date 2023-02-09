@@ -50,7 +50,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="{% url 'create_ticket' %}">Add Ticket</a>
                         <a class="dropdown-item" href="{% url 'all_tickets' %}">Show All Ticket</a>
-                        <a class="dropdown-item" href="{% url 'api_nidan' %}">All GLPI Ticket </a>
+                        <a class="dropdown-item" href="{% url 'api_nidan' %}">All Nidan Ticket </a>
                     </div>
                 </li>
             </ul>
@@ -69,17 +69,14 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="{% url 'settings' %}"> Edit Profile</a>
-                        {% if request.user.group == 'admin' %}
                         <a class="dropdown-item" href="{% url 'register' %}"> Register New User</a>
-                        {% endif %}
                         <a class="dropdown-item" href="{% url 'logout'%}"> Logout</a>
                     </div>
-                    {%else%}
+                    {% else %}
                     <a href="{% url 'login' %}">Login-in</a>
                     {% endif %}
                 </span>
             </div>
-
         </div>
     </nav>
     <div class="container">

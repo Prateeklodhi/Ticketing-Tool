@@ -6,21 +6,24 @@
     {% include 'ticket\messages.html' %}
     <h1>Log-in</h1>
     <div class="row mt-2">
-        <div class="col mt-2">
-            <form action="" method="post">
+        <div class="col-6 mt-2">
+            <form action="" method="post" class="update_form">
                 <label for="username">Username</label>
-                <input type="text" name="username" class="input forms-input">
+                <input type="text" name="username" >
                 <br>
-                <hr>
+                <br>
                 <label for="password">Password</label>
                 <input type="password" name="password" >
                 <br>
-                <hr>
+                <br>
                 {{form.as_p}}
                 {% csrf_token %}
-                <input type="submit" class="btn btn-success mt-2">
+                <button type="submit" class="btn btn-success mt-2">Login</button>
             </form>
+            <br>
+            <br>
             <p>
+                Forgot password?<a href=""> Click Here</a>
             </p>
         
         </div>

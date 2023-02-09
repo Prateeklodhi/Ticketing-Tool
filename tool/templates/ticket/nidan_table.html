@@ -25,7 +25,7 @@
                 <td>{{nidan_ticket.message}}</td> 
                 <td>{{nidan_ticket.grievance_remark}}</td> 
                 <td>{{nidan_ticket.status}}</td> 
-                <td> <a href="{% url 'nidan_data_table' nidan_ticket.id %}" class="btn btn-outline-primary">Solved</a></td>
+                <td> <a href="{% url 'nidan_data_table' nidan_ticket.id %}" class="btn btn-outline-primary">Change</a></td>
             </tr>
         {% endfor %}
     </tbody>

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import TicketForm, UserRegistrationForm, OperatorProfile
+from .forms import TicketForm, UserRegistrationForm, OperatorProfile,NidanForm
 from .models import Ticket,Operator,NidanTicket
 from django.contrib.auth import authenticate, login,logout
 from django.db.models import Q
@@ -20,6 +20,7 @@ def loginuser(request):
         user = authenticate(request,username=username,password=password)
         if user is not None:
             login(request,user)
+            messages.success(request,'Welcome, you have been logged in successfully.')
             return redirect('index')
         else:
             messages.error(request,'username or password might be wrong.')
@@ -32,7 +33,7 @@ def logoutuser(request):
     return redirect('login')
 
 
-@unauthorized_user
+@allowed_users(allowed_roles=['admin',])
 def register(request):
     form = UserRegistrationForm()
     if request.method=='POST':
@@ -49,18 +50,26 @@ def register(request):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['operator'])
 def userSettings(request):
+<<<<<<< HEAD
     operator=request.user
+=======
+    operator_id = request.user
+    operator = Operator.objects.get(user=operator_id)
+>>>>>>> 3ded49d392a42a0bd77a1bc6d27fd7c0ff756e06
     form = OperatorProfile(instance = operator)
     if request.method == 'POST':
         form = OperatorProfile(request.POST,request.FILES,instance=operator)
         if form.is_valid():
             form.save()
+            messages.success(request,'Your profile has been updated successfully.')
+        else:
+            messages.error(request,'Something went wrong.')
     dic = {
         'form':form,
     }
     return render(request,'ticket/userprofile.html',dic)
-
 
 
 @login_required(login_url='login')
@@ -103,50 +112,45 @@ def api_nidan(request):
     else:
         messages.warning(request,'All data have been fatched from the Nidan Api')
     nidan_tickets = NidanTicket.objects.filter(status='pending')
-    print(nidan_tickets)
     dic = {
         'nidan_tickets':nidan_tickets,
     }
     return render(request,'ticket/api_html.html',dic)
 
+
 @login_required(login_url='login')
 def nidan_ticket_data(request,nidan_id):
     nidan_ticket = NidanTicket.objects.get(id = nidan_id)
+    nidan_form = NidanForm(instance=nidan_ticket)
     if request.method=='POST':
-        nidan_ticket.status = 'solved'
-        nidan_ticket.save
-        return redirect('api_nidan')
-    return render(request,'ticket/api_html.html',)
+        nidan_form = NidanForm(request.POST,instance=nidan_ticket)
+        if nidan_form.is_valid():
+            nidan_form.save()
+    dic = {
+        'nidan_form':nidan_form
+    }
+    return render(request,'ticket/nidan_form.html',dic)
 
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['operator','admin'])
 def index(request):
-    ticket_open= None
-    ticket_closed= None
-    total_ticket= None
-    ticket_reopened= None
-    ticket_duplicate= None
-    ticket_resolved= None     
-    print('new pritn',request.user.groups)
-    if request.user.groups == 'admin':
+    if str(request.user.groups.all()[0]) == 'admin':
         tickets = Ticket.objects.all()
         total_ticket = tickets.count()
-        print('admin call:',total_ticket)
-        # ticket_open = tickets.filter(status = 1).count()
-        # ticket_reopened = tickets.filter(status  = 2).count()
-        # ticket_resolved = tickets.filter(status = 3).count()
-        # ticket_closed = tickets.filter(status= 4).count()
-        # ticket_duplicate = tickets.filter(status = 5).count()
-    if request.user.groups == 'operator':
+        ticket_open = tickets.filter(status = 1).count()
+        ticket_reopened = tickets.filter(status  = 2).count()
+        ticket_resolved = tickets.filter(status = 3).count()
+        ticket_closed = tickets.filter(status= 4).count()
+        ticket_duplicate = tickets.filter(status = 5).count()
+    if str(request.user.groups.all()[0]) == 'operator':
         tickets = request.user.operator.ticket_set.all()
         total_ticket = tickets.count()
-        print('operator call:',total_ticket)
-        # ticket_open = tickets.filter(status = 1).count()
-        # ticket_reopened = tickets.filter(status = 2).count()
-        # ticket_resolved = tickets.filter(status = 3).count()
-        # ticket_closed = tickets.filter(status= 4).count()
-        # ticket_duplicate = tickets.filter(status = 5).count()
+        ticket_open = tickets.filter(status = 1).count()
+        ticket_reopened = tickets.filter(status = 2).count()
+        ticket_resolved = tickets.filter(status = 3).count()
+        ticket_closed = tickets.filter(status= 4).count()
+        ticket_duplicate = tickets.filter(status = 5).count()
     dic = {
         'ticket_open' : ticket_open,
         'ticket_closed' : ticket_closed,
@@ -166,8 +170,9 @@ def createTicket(request):
         ticket_form = TicketForm(request.POST)
         if ticket_form.is_valid():
             new_form =  ticket_form.save(commit=False)
-            new_form.created_by =request.user.operator
+            new_form.created_by = request.user.operator
             new_form.save()
+            messages.success(request,'Ticket created succfully for '+str(new_form.first_name+" "+new_form.last_name+'.'))
             return redirect('all_tickets')
     return render(request, 'ticket/ticket.html', {'ticket_form': ticket_form})
 
@@ -185,16 +190,21 @@ def updateTicket(request, pk):
         ticket_form = TicketForm(request.POST, instance=ticket)
         if ticket_form.is_valid():
             new_form =  ticket_form.save(commit=False)
-            new_form.created_by =request.user.operator
+            new_form.created_by = request.user.operator
             new_form.save()
+            messages.success(request,'Ticket updated succfully for '+str(new_form.first_name+" "+new_form.last_name+'.'))
             return redirect('all_tickets')
+       
     return render(request, 'ticket/ticket.html', {'ticket_form': ticket_form})
 
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['operator','admin'])
 def allTicket(request):
-    tickets_object = request.user.operator.ticket_set.all()
+    if str(request.user.groups.all()[0]) == 'admin':
+        tickets_object = Ticket.objects.all()
+    if str(request.user.groups.all()[0]) == 'operator':
+        tickets_object = request.user.operator.ticket_set.all()
     paginator = Paginator(tickets_object,10)
     query = request.GET.get('query') if request.GET.get('query') != None else ''
     tickets = tickets_object.filter(

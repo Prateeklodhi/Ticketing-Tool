@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     path('login/',views.loginuser,name='login'),
     path('logout',views.logoutuser,name='logout'),
-    path('register/', views.register, name='register'),
+    path('register/',views.register, name='register'),
     path('', views.index, name='index'),
     path('nidan-data-table/<str:nidan_id>',views.nidan_ticket_data,name='nidan_data_table'),
     path('edit-profile/',views.userSettings,name='settings'),
