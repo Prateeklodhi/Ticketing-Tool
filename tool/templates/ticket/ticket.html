@@ -57,7 +57,7 @@ Ticket Details
                 </label>
                 {{ticket_form.status}}
             </div>
-            <div class="col mt-3">
+            <div class="col-lg-6 col-12 mt-3">
                 <label for="{{ticket_form.priority.is_for_label}}">
                     {{ticket_form.priority.label_tag}}
                 </label>
@@ -74,20 +74,20 @@ Ticket Details
             </div>
         </div>
         <hr>
-        <div class="row">
-            <div class="col">
-                <label for="{{ticket_form.on_hold.is_for_label}}">
+        <div class="row justify-content-between">
+            <div class=" col-lg-4 col-12 row justify-content-between">
+                <label for="{{ticket_form.on_hold.is_for_label}}" class="col-12">
                     {{ticket_form.on_hold.label_tag}}
                 </label>
                 {{ticket_form.on_hold}}
             </div>
-            <div class="col">
+            <div class=" col-lg-4 col-12 row justify-content-between">
                 <label for="{{ticket_form.image.is_for_label}}">
                     {{ticket_form.image.label_tag}}
                 </label>
                 {{ticket_form.image}}
             </div><br>
-            <div class="col">
+            <div class=" col-lg-4 col-12 row justify-content-between">
                 <label for="{{ticket_form.type_of_problem.is_for_label}}">
                     {{ticket_form.type_of_problem.label_tag}}
                 </label>
@@ -95,7 +95,7 @@ Ticket Details
             </div>
         </div>
         {% csrf_token %}
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
     </form>
 </div>
 <hr>

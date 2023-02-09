@@ -50,6 +50,7 @@ def register(request):
 
 @login_required(login_url='login')
 def userSettings(request):
+    operator=request.user
     form = OperatorProfile(instance = operator)
     if request.method == 'POST':
         form = OperatorProfile(request.POST,request.FILES,instance=operator)
