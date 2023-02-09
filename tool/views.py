@@ -84,7 +84,6 @@ def api_nidan(request):
         response_data = data['data']
         for glpi_client in response_data:
             client = NidanTicket(
-<<<<<<< HEAD
             docket_number = glpi_client['docketNo'],
             citizen_name = glpi_client['citizenName'],
             phone =glpi_client['phone'],
@@ -97,25 +96,6 @@ def api_nidan(request):
             status =glpi_client['status'],
             grievance_remark =glpi_client['grievanceRemarks'],
             callstart  =glpi_client['callStart'],
-=======
-                docket_number=glpi_client['docketNo'],
-                citizen_name=glpi_client['citizenName'],
-                phone=glpi_client['phone'],
-                address=glpi_client['address'],
-                email=glpi_client['email'],
-                district_name=glpi_client['districtName'],
-                municipality=glpi_client['municipality'],
-                colony_name=glpi_client['colonyName'],
-                house_number=glpi_client['houseNo'],
-                street_test=glpi_client['street'],
-                section=glpi_client['section'],
-                message=glpi_client['message'],
-                subsection=glpi_client['subsection'],
-                status=glpi_client['status'],
-                grievance_remark=glpi_client['grievanceRemarks'],
-                callstart=glpi_client['callStart'],
-                opuserid=glpi_client['opuserid']
->>>>>>> 7e252720ae86b207f3d97dd8447ef8dc8b13d075
             )
             try:
                 client.save()
