@@ -1,16 +1,14 @@
 <table class="table table-striped table-bordered" >
     <thead>
         <tr>
-            <th>Docket No</th>
-            <th>Citizen Name</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Section</th>
-            <th>Subsection</th>
-            <th>Message</th>
-            <th>Grievance Remarks</th>
-            <th>Status</th>
-            <th>Change Status</th>
+            <th scope="col">Docket No</th>
+            <th scope="col">Citizen Name</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Message</th>
+            <th scope="col">Status</th>
+            <th scope="col">Created</th>
+            <th scope="col">Updated</th>
+            <th scope="col">Change Status</th>
         </tr>
     </thead>
     <tbody>
@@ -19,12 +17,10 @@
                 <td>{{nidan_ticket.docket_number}}</td> 
                 <td>{{nidan_ticket.citizen_name}}</td> 
                 <td>{{nidan_ticket.phone}}</td> 
-                <td>{{nidan_ticket.email}}</td> 
-                <td>{{nidan_ticket.section}}</td> 
-                <td>{{nidan_ticket.subsection}}</td> 
                 <td>{{nidan_ticket.message}}</td> 
-                <td>{{nidan_ticket.grievance_remark}}</td> 
                 <td>{{nidan_ticket.status}}</td> 
+                <td>{{nidan_ticket.created_date}}</td>
+                <td>{{nidan_ticket.updated_date}}</td>
                 <td> <a href="{% url 'nidan_data_table' nidan_ticket.id %}" class="btn btn-outline-primary">Change</a></td>
             </tr>
         {% endfor %}
