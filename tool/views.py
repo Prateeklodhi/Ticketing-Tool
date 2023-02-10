@@ -10,6 +10,9 @@ from .forms import UserRegistrationForm
 from django.contrib.auth.models import Group
 from .decorators import unauthorized_user, allowed_users, admin_only
 from django.core.paginator import Paginator
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import NidanSolvedSerializer
 # Create your views here.
 
 
@@ -133,6 +136,22 @@ def nidan_ticket_data(request, nidan_id):
     }
     return render(request, 'ticket/nidan_form.html', dic)
 
+
+#this api will return all the sovled docket number 
+@api_view(['GET'])
+def nidanSolvedList(request):
+    nidansolved = NidanTicket.objects.filter(status='solved')
+    print(nidansolved)
+    nidanserializer = NidanSolvedSerializer(nidansolved,many=True)
+    return Response(nidanserializer.data)
+
+
+#this api will return selected sovled docket number 
+@api_view('[GET]')
+def nidanSolvedDetail(request,dcnum):
+    Nidansolvedticket= NidanTicket.objects.get(docket_number=dcnum)
+    nidanserializer = NidanSolvedSerializer(NidanSolvedSerializer,many=False)
+    return Response(nidanserializer.data)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['operator', 'admin'])
