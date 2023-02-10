@@ -147,11 +147,12 @@ def nidanSolvedList(request):
 
 
 #this api will return selected sovled docket number 
-@api_view('[GET]')
+@api_view(['GET'])
 def nidanSolvedDetail(request,dcnum):
     Nidansolvedticket= NidanTicket.objects.get(docket_number=dcnum)
-    nidanserializer = NidanSolvedSerializer(NidanSolvedSerializer,many=False)
+    nidanserializer = NidanSolvedSerializer(Nidansolvedticket,many=False)
     return Response(nidanserializer.data)
+
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['operator', 'admin'])

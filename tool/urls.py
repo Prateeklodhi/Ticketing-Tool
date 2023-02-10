@@ -3,8 +3,8 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-    path('nindan-solved-api/<str:dcnum>',name='nidan_solved_api'),
-    path('nindan-solved-list-api/',name='nidan_solved_list_api'),
+    path('nidan-solved-api/<str:dcnum>',views.nidanSolvedDetail,name='nidan_solved_api'),
+    path('nidan-solved-list-api/',views.nidanSolvedList,name='nidan_solved_list_api'),
     path('login/',views.loginuser,name='login'),
     path('logout',views.logoutuser,name='logout'),
     path('register/',views.register, name='register'),
