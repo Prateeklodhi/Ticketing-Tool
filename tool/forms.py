@@ -4,13 +4,23 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
+
 class NidanForm(ModelForm):
     class Meta:
         model = NidanTicket
         fields ='__all__'
         widgets = {
-            'message':forms.Textarea(attrs={'cols': '60', 'rows': '3','description':'description'}),
-            'address':forms.Textarea(attrs={'cols': '60', 'rows': '3','description':'description'}),
+            'docket_number':forms.TextInput(attrs={'disabled':True}),
+            'citizen_name':forms.TextInput(attrs={'disabled':True}),
+            'phone':forms.TextInput(attrs={'disabled':True}),
+            'email':forms.TextInput(attrs={'disabled':True}),
+            'municipality':forms.TextInput(attrs={'disabled':True}),
+            'section':forms.TextInput(attrs={'disabled':True}),
+            'subsection':forms.TextInput(attrs={'disabled':True}),
+            'grievance_remark':forms.TextInput(attrs={'disabled':True}),
+            'callstart':forms.TextInput(attrs={'disabled':True}),
+            'message':forms.Textarea(attrs={'cols': '60', 'rows': '3','description':'description','disabled':True}),
+            'address':forms.Textarea(attrs={'cols': '60', 'rows': '3','description':'description','disabled':True}),
         }
 
 
@@ -19,6 +29,7 @@ class OperatorProfile(ModelForm):
         model = Operator
         fields = '__all__'
         exclude = ['user']
+
 
 class UserRegistrationForm(UserCreationForm):
       class Meta:

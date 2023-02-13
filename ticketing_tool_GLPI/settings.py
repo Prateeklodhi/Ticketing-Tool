@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -30,13 +30,14 @@ ALLOWED_HOSTS = ['192.168.1.7','127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tool.apps.ToolConfig',
+    'django.contrib.admin',
     'phonenumber_field',
     'rest_framework',
 ]
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'ticketing_tool_GLPI.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -115,7 +116,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 PHONENUMBER_DEFAULT_REGION = 'IN'
-import os
+
 MEDIA_ROOT = os.path.join(BASE_DIR,'media/images')
 STATIC_URL = 'static/'
 MEDIA_URL = 'media/'
@@ -124,11 +125,7 @@ MEDIA_URL = 'media/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# LOGIN_REDIRECT_URL = 'index'
-# LOGIN_URL = 'login'
-# LOGOUT_URL = 'logout'
+LOGIN_REDIRECT_URL = 'index'
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
 # we whitelist localhost:3000 because that's where frontend will be served
-CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3000'
-]
-# 
