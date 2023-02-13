@@ -37,43 +37,107 @@ body
     color: rgb(1, 1, 83);
 }
 
-/* ---------------------chart css---------------- */
-.chart_list
+.message.hide
 {
-    list-style: none;
-}
-.chart_single
-{
-    height: 30px;
-    border-bottom-right-radius: 10px;
-    border-top-right-radius: 10px;
-    margin: 10px;
-    display: flex;    
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid #5e5e03;;
-}
-.chart_single>span{
-    position: relative;
-    font-size: 13px;
-    padding-left: 10px;
+    display: none !important;
 }
 
-.chart_single::before
+/* ---------------------chart css---------------- */
+
+.bar_chart
+{
+    display: flex;
+    align-items: center;
+    border-left: 1px solid #0e0e0e;
+    border-bottom: 1px solid #0e0e0e;
+    padding-left: 100px;
+    height: 400px;
+    position: relative;    
+}
+.bar_chart::before
 {
     position: absolute;
     content: '';
     width: 100%;
     height: 100%;
-    background: #e2e223c2;
+    top: 0;
+    left: 0;
+    background:url('../images/chartbg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    backface-visibility: unset;
+    opacity: 0.5;
 }
-.chart_single:nth-child(2):before
+.Total_details
 {
-    background: #13d8ce80;
+    position: absolute;
+    left: 50px;
+    top: 10px;
+    width: 50%;
+    height: 100px;
+    z-index: 99;
+}
+.single_chart
+{    
+    position: absolute;    
+    /* bottom: 0; */
+    height: 80%;
+    bottom: -8px;
+    width: 30px;
+    overflow: hidden;
+    height: calc(var(--i)*1%);
+}
+.single_chart::before
+{
+    
+    position: absolute;
+    content: '';
+    left: 0;
+    bottom: 0;
+    height: calc(var(--i)*1%);
+    width: 100%;
+}
+.single_chart span
+{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.single_chart:nth-child(1)
+{
+    background: rgb(5, 231, 5);
+    left: 50px;
 }
 
-.chart_single:nth-child(3):before
+
+.single_chart:nth-child(2)
 {
-    background: #06f126d7;
+    left: 120px;
+    background: rgb(2, 99, 2);
+    
+}
+
+.single_chart:nth-child(3)
+{
+    background: rgb(35, 39, 35);
+    
+    left:190px;
+}
+
+.single_chart:nth-child(4)
+{
+    background: rgb(2, 99, 2);
+    left: 260px;
+}
+
+.single_chart:nth-child(5)
+{
+    left: 310px;
+    background: rgb(35, 39, 35);
+}
+
+.single_chart:nth-child(6)
+{
+    background: rgb(32, 54, 179);
+    left:380px;
 }

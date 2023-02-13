@@ -1,21 +1,32 @@
-{% block title %}
-{% endblock title %}
 {% block content %}
-       
-<section class="chart container bg-light d-flex-justify-content-center align-items-center">
-    <h3>Bar Chart</h3>
-    <div class="inner_chart col-12 col-lg-6">
-        <ul class="chart_list col-12 p-5">
-            <li class="queries chart_single">
-                <span>Questions</span>
-            </li>
-            <li class="solved chart_single">
-                <span>Solved</span>
-            </li>
-            <li class="pending chart_single">
-                <span>Pending</span>
-            </li>
-        </ul>
+
+<section class="chart container m-5">
+  <h3>Chart Details</h3>
+  
+  <div class="inner_chart col-12 mt-3 ">
+    <div class="Total_details">
+      <h5>
+        Total Queries:<p class="ml-5"> 59</p></div>
+      </h5>
+    
+    <div class="col-12 col-lg-6 bar_chart">
+      <div class="single_chart m-2" style="--i:20"> 
+      </div>
+      <div class="single_chart m-2" style="--i:50">        
+      </div>
+      <div class="single_chart m-2" style="--i:30">     
+      </div>
+      <div class="single_chart m-2" style="--i:20"> 
+      </div>
+      <div class="single_chart m-2" style="--i:50">        
+      </div>
+      <div class="single_chart m-2" style="--i:30">     
+      </div>
     </div>
+  </div>
 </section>
-{% endblock content %}
+<script>
+  
+</script>
+
+{% endblock %}

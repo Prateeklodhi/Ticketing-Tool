@@ -10,6 +10,7 @@ from .forms import UserRegistrationForm
 from django.contrib.auth.models import Group
 from .decorators import unauthorized_user, allowed_users, admin_only
 from django.core.paginator import Paginator
+import json
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import NidanSolvedSerializer
@@ -193,7 +194,7 @@ def index(request):
         'ticket_duplicate': ticket_duplicate,
         'ticket_resolved': ticket_resolved,
     }
-    return render(request, 'ticket/home.html', dic)
+    return render(request, 'ticket/home.html',dic)
 
 
 @login_required(login_url='login')
@@ -247,3 +248,7 @@ def allTicket(request):
         Q(first_name__icontains=query)
     )
     return render(request, 'ticket/allticket.html', {'tickets': tickets})
+
+
+
+

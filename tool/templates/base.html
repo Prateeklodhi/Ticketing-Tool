@@ -38,8 +38,12 @@
     </div>
     <script>
         setTimeout(function () {
-            const message = document.querySelector('.message');
-            message.style.visibility='hidden';
+            const message = document.querySelectorAll('.message');
+            for(i=0;i<message.length;i++)
+            {
+                // message[i].style.visibility='hidden';
+                message[i].classList.add('hide');
+            }            
         }, 2000);
         
     </script>
