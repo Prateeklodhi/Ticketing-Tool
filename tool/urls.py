@@ -1,8 +1,10 @@
-from django.urls import path, include
+from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
+    path('nidan-solved-api/<str:dcnum>',views.nidanSolvedDetail,name='nidan_solved_api'),
+    path('nidan-solved-list-api/',views.nidanSolvedList,name='nidan_solved_list_api'),
     path('login/',views.loginuser,name='login'),
     path('logout',views.logoutuser,name='logout'),
     path('register/',views.register, name='register'),
