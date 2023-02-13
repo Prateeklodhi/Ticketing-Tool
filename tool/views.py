@@ -10,13 +10,10 @@ from .forms import UserRegistrationForm
 from django.contrib.auth.models import Group
 from .decorators import unauthorized_user, allowed_users, admin_only
 from django.core.paginator import Paginator
-<<<<<<< HEAD
 import json
-=======
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import NidanSolvedSerializer
->>>>>>> a1b3cbe4fe1b45587f14b83c5c89f689abe5b2fd
 # Create your views here.
 
 
