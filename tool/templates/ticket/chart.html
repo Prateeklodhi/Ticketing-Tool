@@ -1,11 +1,36 @@
 {% block content %}
+<h3 class="text-center">Chart Details</h3>
+<section class="chart_section container m-5  row justify-content-between">
 
-<section class="chart container m-5">
-  <h3>Chart Details</h3>
-  
-  <div class="inner_chart col-12 mt-3 ">
+  <div class="inner_chart col-12 col-lg-6 ">
     <div class="Total_details">
       <h5>
+<<<<<<< HEAD
+        Total Tickets:<p class="ml-5"> {{total_ticket}}</p>
+    </div>
+    </h5>
+    <div class="col-12 col-lg-6 bar_chart">
+      <div class="single_chart m-2" style="--i:100">
+        <!-- <p>Open Tickets</p> -->
+        <h6>{{ticket_open}}%</h6>
+      </div>
+
+      <div class="single_chart m-2" style="--i:50">
+        <!-- <p>Close Tickets</p> -->
+        <h6>{{ticket_closed}}%</h6>
+      </div>
+      <div class="single_chart m-2" style="--i:30">
+        <!-- <p>Resolved Tickets</p> -->
+        <h6>{{ticket_resolved}}%</h6>
+      </div>
+      <div class="single_chart m-2" style="--i:30">
+        <!-- <p>Nidan Solved Tickets</p> -->
+        <h6>{{ticket_resolved}}%</h6>
+      </div>
+      <div class="single_chart m-2" style="--i:30">
+        <!-- <p>Open Nidan Tickets</p> -->
+        <h6>{{ticket_resolved}}%</h6>
+=======
         Total Tickets:<p class="ml-5"> {{total_ticket}}</p></div>
       </h5>
     
@@ -15,12 +40,35 @@
       <div class="single_chart m-2" style="--i:{{ticket_closed}}">        
       </div>
       <div class="single_chart m-2" style="--i:{{ticket_resolved}}">     
+>>>>>>> f1adb5e60157e6c818089abc5a82aefe48719462
       </div>
     </div>
   </div>
+  <div class="details col-12 col-lg-6 mt-5">
+    <div class="color_boxes">
+      <div class="single_color_box">
+        <span></span>
+        <p>Open Tickets</p>
+      </div>
+      <div class="single_color_box">
+        <span></span>
+        <p>Close Tickets</p>
+      </div>
+      <div class="single_color_box">
+        <span></span>
+        <p>Resolved Tickets</p>
+      </div>
+      <div class="single_color_box">
+        <span></span>
+        <p>Nidan Solved Tickets</p>
+      </div>
+      <div class="single_color_box">
+        <span></span>
+        <p>Open Nidan Tickets</p>
+      </div>
+
+    </div>
+  </div>
 </section>
-<script>
-  
-</script>
 
 {% endblock %}
