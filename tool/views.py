@@ -11,6 +11,7 @@ from django.contrib.auth.models import Group
 from .decorators import unauthorized_user, allowed_users, admin_only
 from django.core.paginator import Paginator
 import json
+from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import NidanSolvedSerializer
@@ -120,13 +121,12 @@ def api_nidan(request): # to retrive all the nidan api data and store it in to t
     return render(request, 'ticket/api_html.html', dic)
 
 # to show all the solved data of the nidan api
-@login_required(login_url='login')
-def show_nidan_data(request):
-    nidan_solved = NidanTicket.objects.filter(status='solved')
-    dic = {
-        'nidan_solved':nidan_solved
-    }
-    return 
+# @login_required(login_url='login')
+# def nidan_solved_data(request):
+#     nidan_solved = NidanTicket.objects.filter(status='solved').values()
+#     print(nidan_solved)
+#     return JsonResponse({'dic':list(nidan_solved)},safe=False)
+
 
 @login_required(login_url='login')
 def nidan_ticket_data(request, nidan_id):

@@ -6,6 +6,7 @@ urlpatterns = [
     path('',include('django.contrib.auth.urls')),
     path('nidan-solved-api/<str:dcnum>',views.nidanSolvedDetail,name='nidan_solved_api'),
     path('nidan-solved-list-api/',views.nidanSolvedList,name='nidan_solved_list_api'),
+    # path('nidan-solved/',views.nidan_solved_data,name='nidan_solved'),
     path('register/',views.register, name='register'),
     path('', views.index, name='index'),
     path('nidan-data-table/<str:nidan_id>',views.nidan_ticket_data,name='nidan_data_table'),
