@@ -20,7 +20,7 @@ def allowed_users(allowed_roles=[]):
             if group in allowed_roles:
                 return view_func(request,*args,**kwargs)
             else:
-                messages.error(request,'Sorry You are authorized to access this page.')
+                messages.error(request,'Sorry You are not authorized to access this page.')
                 return redirect('index')
         return wrapper_func
     return decorator

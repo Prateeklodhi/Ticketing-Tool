@@ -12,6 +12,11 @@ class Operator(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
     email = models.EmailField(max_length=200,null=True,blank=False)
     
+    class Meta:
+        ordering = ['date_created']
+        indexes = [
+            models.Index(fields=['date_created'])
+        ]
     def __str__(self) -> str:
         return str(self.user)
 
@@ -96,5 +101,11 @@ class NidanTicket(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['created_date']
+        indexes = [
+            models.Index(fields=['created_date',])
+        ]
+    
     def __str__(self) -> str:
         return self.docket_number+' '+self.citizen_name

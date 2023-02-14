@@ -16,14 +16,14 @@
                 <input type="password" name="password" >
                 <br>
                 <br>
-                {{form.as_p}}
+                
                 {% csrf_token %}
                 <button type="submit" class="btn btn-success mt-2">Login</button>
             </form>
             <br>
             <br>
             <p>
-                Forgot password?<a href=""> Click Here</a>
+                Forgot password?<a href="{% url 'password_reset'%}"> Click Here</a>
             </p>
         
         </div>

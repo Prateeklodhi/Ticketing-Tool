@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from .models import Operator,Ticket
 
-
 def create_operator(sender, instance, created, **kwargs):
     if created:
         group = Group.objects.get(name='operator')

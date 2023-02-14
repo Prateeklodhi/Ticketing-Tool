@@ -14,6 +14,7 @@ import json
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import NidanSolvedSerializer
+
 # Create your views here.
 
 
@@ -76,9 +77,10 @@ def userSettings(request):
     return render(request, 'ticket/userprofile.html', dic)
 
 
+# Nidan flows starts from here 
 @login_required(login_url='login')
 # @allowed_users(allowed_roles=['operator'])
-def api_nidan(request):
+def api_nidan(request): # to retrive all the nidan api data and store it in to the data base if data already exsists it drop the save function and if new data will arrive it will take the data as pending data and save it into the data base.
     message_flag = None
     response_data = None
     if request.method == 'GET':
@@ -117,6 +119,14 @@ def api_nidan(request):
     }
     return render(request, 'ticket/api_html.html', dic)
 
+# to show all the solved data of the nidan api
+@login_required(login_url='login')
+def show_nidan_data(request):
+    nidan_solved = NidanTicket.objects.filter(status='solved')
+    dic = {
+        'nidan_solved':nidan_solved
+    }
+    return 
 
 @login_required(login_url='login')
 def nidan_ticket_data(request, nidan_id):
@@ -155,6 +165,7 @@ def nidanSolvedDetail(request,dcnum):
     return Response(nidanserializer.data)
 
 
+#this is the home page of ticketing tool webapplication allowed user for this page are admin and operator.
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['operator', 'admin'])
 def index(request):
@@ -175,6 +186,7 @@ def index(request):
         ticket_closed = tickets.filter(status=4).count()
         ticket_duplicate = tickets.filter(status=5).count()
     dic = {
+        'section':'index',
         'ticket_open': ticket_open,
         'ticket_closed': ticket_closed,
         'total_ticket': total_ticket,
@@ -219,7 +231,6 @@ def updateTicket(request, pk):
             messages.success(request, 'Ticket updated succfully for ' +
                              str(new_form.first_name+" "+new_form.last_name+'.'))
             return redirect('all_tickets')
-
     return render(request, 'ticket/ticket.html', {'ticket_form': ticket_form})
 
 
@@ -230,18 +241,6 @@ def allTicket(request):
         tickets_object = Ticket.objects.all()
     if str(request.user.groups.all()[0]) == 'operator':
         tickets_object = request.user.operator.ticket_set.all()
-    paginator = Paginator(tickets_object, 10)
-    query = request.GET.get('query') if request.GET.get(
-        'query') != None else ''
-    tickets = tickets_object.filter(
-        Q(contact__icontains=query) |
-        Q(first_name__icontains=query)
-    )
-    return render(request, 'ticket/allticket.html', {'tickets': tickets})
-
-
-def search(request):
-    tickets_object = request.user.operator.ticket_set.all()
     query = request.GET.get('query') if request.GET.get(
         'query') != None else ''
     tickets = tickets_object.filter(
