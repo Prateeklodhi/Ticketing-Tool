@@ -6,21 +6,15 @@
   <div class="inner_chart col-12 mt-3 ">
     <div class="Total_details">
       <h5>
-        Total Queries:<p class="ml-5"> 59</p></div>
+        Total Tickets:<p class="ml-5"> {{total_ticket}}</p></div>
       </h5>
     
     <div class="col-12 col-lg-6 bar_chart">
-      <div class="single_chart m-2" style="--i:20"> 
+      <div class="single_chart m-2" style="--i:{{ticket_open}}"> 
       </div>
-      <div class="single_chart m-2" style="--i:50">        
+      <div class="single_chart m-2" style="--i:{{ticket_closed}}">        
       </div>
-      <div class="single_chart m-2" style="--i:30">     
-      </div>
-      <div class="single_chart m-2" style="--i:20"> 
-      </div>
-      <div class="single_chart m-2" style="--i:50">        
-      </div>
-      <div class="single_chart m-2" style="--i:30">     
+      <div class="single_chart m-2" style="--i:{{ticket_resolved}}">     
       </div>
     </div>
   </div>
