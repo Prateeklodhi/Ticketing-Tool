@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import TicketForm, UserRegistrationForm, OperatorProfile, NidanForm
 from .models import Ticket, Operator, NidanTicket
 from django.contrib.auth import authenticate, login, logout
@@ -7,9 +7,7 @@ from django.contrib.auth.decorators import login_required
 import requests
 from django.contrib import messages
 from .forms import UserRegistrationForm
-from django.contrib.auth.models import Group
 from .decorators import unauthorized_user, allowed_users, admin_only
-from django.core.paginator import Paginator
 import json
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
@@ -17,8 +15,6 @@ from rest_framework.response import Response
 from .serializers import NidanSolvedSerializer
 
 # Create your views here.
-
-
 @unauthorized_user
 def loginuser(request):
     if request.method == 'POST':
@@ -32,7 +28,7 @@ def loginuser(request):
             return redirect('index')
         else:
             messages.error(request, 'username or password might be wrong.')
-    return render(request, 'registration/login.html')
+    return render(request, 'credential/login.html')
 
 
 def logoutuser(request):
@@ -42,7 +38,7 @@ def logoutuser(request):
 
 
 @allowed_users(allowed_roles=['admin',])
-def register(request):
+def registeruser(request):
     form = UserRegistrationForm()
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST, request.FILES)
@@ -55,7 +51,7 @@ def register(request):
     dic = {
         'user_form': form,
     }
-    return render(request, 'registration/register.html', dic)
+    return render(request, 'credential/register.html', dic)
 
 
 @login_required(login_url='login')
@@ -114,38 +110,49 @@ def api_nidan(request): # to retrive all the nidan api data and store it in to t
     else:
         messages.warning(
             request, 'All data have been fatched from the Nidan Api')
-    nidan_tickets = NidanTicket.objects.filter(status='pending')
+    nidan_tickets = NidanTicket.objects.all()
     dic = {
         'nidan_tickets': nidan_tickets,
     }
-    return render(request, 'ticket/api_html.html', dic)
-
-# to show all the solved data of the nidan api
-# @login_required(login_url='login')
-# def nidan_solved_data(request):
-#     nidan_solved = NidanTicket.objects.filter(status='solved').values()
-#     print(nidan_solved)
-#     return JsonResponse({'dic':list(nidan_solved)},safe=False)
+    return render(request, 'ticket/nidan_all_tickets.html', dic)
 
 
 @login_required(login_url='login')
-def nidan_ticket_data(request, nidan_id):
-    nidan_ticket = NidanTicket.objects.get(id=nidan_id)
-    nidan_form = NidanForm(instance=nidan_ticket)
-    if request.method == 'POST':
-        nidan_form = NidanForm(request.POST, instance=nidan_ticket)
-        if nidan_form.is_valid():
-            new_nidan_form = nidan_form.save(commit=False)
-            if new_nidan_form.status == 'solved':
-                new_nidan_form.save()
-                messages.success(request,'Docket Number '+ str(nidan_ticket)+' is solved.')
-                return redirect('api_nidan')
-            else:
-                messages.warning(request,'No changes found.')
+def nidanTicketData(request,pk):
+    nidan_instance = get_object_or_404(NidanTicket,id=pk)
+    nidan_form = NidanForm(request.POST or None,instance=nidan_instance)
+    if nidan_form.is_valid():
+        nidan_form_status = nidan_form.save(commit=False)
+        if nidan_form_status.status == 'solved':
+            nidan_form_status.save()
+            messages.success(request,'Docket for '+ str(nidan_instance)+" is solved now.")
+            return redirect('api_nidan')
+        else:
+            messages.warning(request,'No changes detacted.')
     dic = {
-        'nidan_form': nidan_form
+        'nidan_form':nidan_form,
+        'nidan_instance':nidan_instance,
     }
-    return render(request, 'ticket/nidan_form.html', dic)
+    return render(request,'ticket/nidan_form.html',dic)
+
+
+@login_required(login_url='login')
+def nidan_pending_data(request):
+    nidan_tickets = NidanTicket.objects.filter(status='pending')
+    dic = {
+         'nidan_tickets': nidan_tickets,
+    }
+    return render(request,'ticket/nidan_pending_tickets.html',dic)
+
+
+# to show all the solved data of the nidan api
+@login_required(login_url='login')
+def nidan_solved_data(request):
+    nidan_tickets = NidanTicket.objects.filter(status='solved')
+    dic = {
+        'nidan_tickets': nidan_tickets,
+    }
+    return render(request,'ticket/nidan_solved_tickets.html',dic)
 
 
 #this api will return all the sovled docket number 
@@ -207,8 +214,7 @@ def createTicket(request):
             new_form = ticket_form.save(commit=False)
             new_form.created_by = request.user.operator
             new_form.save()
-            messages.success(request, 'Ticket created succfully for ' +
-                             str(new_form.first_name+" "+new_form.last_name+'.'))
+            messages.success(request, 'Ticket created succfully for ' +str(new_form.first_name+" "+new_form.last_name+'.'))
             return redirect('all_tickets')
     return render(request, 'ticket/ticket.html', {'ticket_form': ticket_form})
 
@@ -247,7 +253,7 @@ def allTicket(request):
         Q(contact__icontains=query) |
         Q(first_name__icontains=query)
     )
-    return render(request, 'ticket/allticket.html', {'tickets': tickets})
+    return render(request, 'ticket/alltickets.html', {'tickets': tickets})
 
 
 

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-    Nidan Data
+Nidan Data
 {% endblock title %}
 {% block content %}
 {% include 'ticket\messages.html'%}
@@ -11,84 +11,84 @@
             {% csrf_token %}
             <div class="row mt-3">
                 <div class="col-6">
-                    <label for="{{nidan_form.docket_number.is_for_label}}">{{nidan_form.docket_number.label_tag}}</label>
-                    {{nidan_form.docket_number}}
+                        <label> Docket Number</label>
+                    {{nidan_instance.docket_number}}
                     <br>
                 </div>
                 <div class="col-6">
-                    <label for="{{nidan_form.citizen_name.is_for_label}}">{{nidan_form.citizen_name.label_tag}}</label>
-                    {{nidan_form.citizen_name}}
-                    <br>
-                </div>
-            </div>
-            <br>
-            <div class="row mt-3">
-                <div class="col-6">
-                    <label for="{{nidan_form.phone.is_for_label}}">{{nidan_form.phone.label_tag}}</label>
-                    {{nidan_form.phone}}
-                    <br>
-                </div>
-                <div class="col-6">
-                    <label for="{{nidan_form.address.is_for_label}}">{{nidan_form.address.label_tag}}</label>
-                    {{nidan_form.address}}
+                    <label>Citizen Name</label>
+                    {{nidan_instance.citizen_name}}
                     <br>
                 </div>
             </div>
             <br>
             <div class="row mt-3">
                 <div class="col-6">
-                    <label for="{{nidan_form.email.is_for_label}}">{{nidan_form.email.label_tag}}</label>
-                    {{nidan_form.email}}
+                    <label>Phone Number</label>
+                    {{nidan_instance.phone}}
                     <br>
                 </div>
                 <div class="col-6">
-                    <label for="{{nidan_form.municipality.is_for_label}}">{{nidan_form.municipality.label_tag}}</label>
-                    {{nidan_form.municipality}}
-                    <br>
-                </div>
-            </div>
-            <br>
-            <div class="row mt-3">
-                <div class="col-6">
-                    <label for="{{nidan_form.section.is_for_label}}">{{nidan_form.section.label_tag}}</label>
-                    {{nidan_form.section}}
-                    <br>
-                </div>
-                <div class="col-6">
-                    <label for="{{nidan_form.message.is_for_label}}">{{nidan_form.message.label_tag}}</label>
-                    {{nidan_form.message}}
-                    <br>
+                    <label>Address</label>
+                        {{nidan_instance.address}}
+                        <br>
                 </div>
             </div>
             <br>
             <div class="row mt-3">
                 <div class="col-6">
-                    <label for="{{nidan_form.subsection.is_for_label}}">{{nidan_form.subsection.label_tag}}</label>
-                    {{nidan_form.subsection}}
-                    <br>
+                    <label>Email</label>
+                        {{nidan_instance.email}}
+                        <br>
                 </div>
                 <div class="col-6">
-                    <label for="{{nidan_form.status.is_for_label}}">{{nidan_form.status.label_tag}}</label>
-                    {{nidan_form.status}}
-                    <br>
+                    <label>Municipality</label>
+                       {{nidan_instance.municipality}}
+                        <br>
                 </div>
             </div>
             <br>
             <div class="row mt-3">
                 <div class="col-6">
-                    <label for="{{nidan_form.grievance_remark.is_for_label}}">{{nidan_form.grievance_remark.label_tag}}</label>
-                    {{nidan_form.grievance_remark}}
-                    <br>
+                    <label>Section</label>
+                       {{nidan_instance.section}}
+                        <br>
                 </div>
                 <div class="col-6">
-                    <label for="{{nidan_form.callstart.is_for_label}}">{{nidan_form.callstart.label_tag}}</label>
-                    {{nidan_form.callstart}}
-                    <br>
+                    <label>Message</label>
+                       {{nidan_instance.message}}
+                        <br>
+                </div>
+            </div>
+            <br>
+            <div class="row mt-3">
+                <div class="col-6">
+                    <label>Subsection</label>
+                       {{nidan_instance.subsection}}
+                        <br>
+                </div>
+                <div class="col-6">
+                    <label>Status</label>
+                        {{nidan_form.status}}
+                        <br>
+                </div>
+            </div>
+            <br>
+            <div class="row mt-3">
+                <div class="col-6">
+                    <label>Grievance Remark</label>
+                        {{nidan_instance.grievance_remark}}
+                        <br>
+                </div>
+                <div class="col-6">
+                    <label>Call Date</label>
+                        {{nidan_instance.callstart}}
+                        <br>
                 </div>
             </div>
             <br>
             <button class="btn-outline-primary btn" type="submit">Submit</button>
-            <a href="{% url 'api_nidan'%}" class="btn btn-outline-warning">Back</a>
+            <a href="{% url 'api_nidan' %}" class="btn btn-outline-warning">Cancel</a>
         </form>
     </div>
 </div>

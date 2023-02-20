@@ -8,21 +8,8 @@ from django.contrib.auth.forms import UserCreationForm
 class NidanForm(ModelForm):
     class Meta:
         model = NidanTicket
-        fields ='__all__'
-        widgets = {
-            'docket_number':forms.TextInput(attrs={'disabled':True}),
-            'citizen_name':forms.TextInput(attrs={'disabled':True}),
-            'phone':forms.TextInput(attrs={'disabled':True}),
-            'email':forms.TextInput(attrs={'disabled':True}),
-            'municipality':forms.TextInput(attrs={'disabled':True}),
-            'section':forms.TextInput(attrs={'disabled':True}),
-            'subsection':forms.TextInput(attrs={'disabled':True}),
-            'grievance_remark':forms.TextInput(attrs={'disabled':True}),
-            'callstart':forms.TextInput(attrs={'disabled':True}),
-            'message':forms.Textarea(attrs={'cols': '60', 'rows': '3','description':'description','disabled':True}),
-            'address':forms.Textarea(attrs={'cols': '60', 'rows': '3','description':'description','disabled':True}),
-        }
-
+        fields =['status']
+        exclude = ['docket_number','citizen_name','phone','address','email','municipality','section','message','subsection','grievance_remark']
 
 class OperatorProfile(ModelForm):
     class Meta:
