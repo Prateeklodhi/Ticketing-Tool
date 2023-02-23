@@ -1,17 +1,15 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
-
 urlpatterns = [
-    path('ajax/',views.ajax_trial,name='ajax_trial'),
-    path('my-temp/',views.my_temp,name='my_page'),
+    path('', views.index, name='index'),
     path('login/',views.loginuser,name='login'),
     path('resgister/',views.registeruser,name='register'),
     path('logout/',views.logoutuser,name='logout'),
     path('password-change/',auth_views.PasswordChangeView.as_view(),name='password_change'),
     path('password-change-done/',auth_views.PasswordChangeDoneView.as_view(),name='password_change_done'),
     path('password-reset-form/',auth_views.PasswordResetView.as_view(),name='password_reset'),
-    path('password-reset-confirm/',auth_views.PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
+    path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('password-reset-complete/',auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete'),
     path('password-reset-done/',auth_views.PasswordResetDoneView.as_view(),name='password_reset_done'),
     path('api-nidan/nidan-solved-api/<str:dcnum>/',views.nidanSolvedDetail,name='nidan_solved_api'),
@@ -28,5 +26,4 @@ urlpatterns = [
     path('close-tickets/',views.closeticketslist,name='close_tickets'),
     path('create-ticket/', views.createTicket, name='create_ticket'),
     path('update-ticket/<str:pk>/', views.updateTicket, name='update_ticket'),
-    path('', views.index, name='index'),
 ]

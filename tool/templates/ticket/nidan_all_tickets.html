@@ -3,12 +3,12 @@
 {% block content %}
 {% include 'ticket\messages.html'%}
 <div class="row">
-    <br>
-    <div class="col table-responsive">
-        <br>    
+    <div class="col">
         <h3>Nidan Dockets </h3>
     </div>
 </div>
+    {% include 'ticket\search_docket.html'%}
+<br>
 <ul class="nav nav-tabs">
     <li class="nav-i">
         <a class="nav-link active" href="{% url 'api_nidan' %}">All</a>  

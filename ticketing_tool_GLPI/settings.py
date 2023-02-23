@@ -102,6 +102,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'gloitelticketing@gmail.com'
+EMAIL_HOST_PASSWORD = 'hixnuqvclbjjdcgy'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/

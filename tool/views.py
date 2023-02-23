@@ -13,19 +13,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import NidanSolvedSerializer
-
-def ajax_trial(request):
-    my_objects = json.loads(request.GET.get('my_objects', '[]')) # Retrieve the filtered objects from the request data
-    # Process the data and return a JsonResponse
-    data = {'my_object': my_objects}
-    return JsonResponse(data)
-
-def my_temp(request):
-    tickets = Ticket.objects.all()
-    dic = {
-        'tickets':tickets
-    }
-    return render(request,'ticket/trial.html',dic)
+from django.core.mail import send_mail
 # Create your views here.
 @unauthorized_user
 def loginuser(request):
@@ -56,9 +44,20 @@ def registeruser(request):
         form = UserRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            first = form.cleaned_data.get('first_name')
+            last = form.cleaned_data.get('last_name')
+            password = form.cleaned_data.get('password1')
             username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            send_mail(
+                ('Gloitel Ticketing tool credential of '+first+''+last+'.'),
+                str('Hey '+first+''+last+'. Your username is '+username+' and your password is '+password+'.'),
+                'gloitelticketing@gmail.com',
+                [email],
+                fail_silently=False,
+            )
             messages.success(
-                request, 'Account Created Successfully For '+username)
+                request, 'Account Created Successfully For '+first+' '+last+', Mail has been sent.')
             return redirect('index')
     dic = {
         'user_form': form,
@@ -122,7 +121,12 @@ def api_nidan(request): # to retrive all the nidan api data and store it in to t
     else:
         messages.warning(
             request, 'All data have been fatched from the Nidan Api')
-    nidan_tickets = NidanTicket.objects.all()
+    nidan_ticket = NidanTicket.objects.all()
+    query = request.GET.get('query') if request.GET.get(
+        'query') != None else ''
+    nidan_tickets = nidan_ticket.filter(
+        Q(docket_number__icontains=query) 
+    )
     dic = {
         'nidan_tickets': nidan_tickets,
     }
@@ -194,6 +198,16 @@ def nidanSolvedDetail(request,dcnum):
     nidanserializer = NidanSolvedSerializer(Nidansolvedticket,many=False)
     return Response(nidanserializer.data)
 
+
+@login_required(login_url='login')
+def searchnidan(request):
+    nidan_ticket = NidanTicket.objects.all()
+    query = request.GET.get('query') if request.GET.get(
+        'query') != None else ''
+    tickets = nidan_ticket.filter(
+        Q(docket_number__icontains=query) 
+    )
+    return render(request, 'ticket/nidan_all_tickets.html', {'tickets': tickets})
 
 #this is the home page of ticketing tool webapplication allowed user for this page are admin and operator.
 @login_required(login_url='login')
@@ -301,7 +315,6 @@ def reopenticketslist(request):
         tickets =  tickets = Ticket.objects.filter(status=2)
     if str(request.user.groups.all()[0]) == 'operator':
         tickets = request.user.operator.ticket_set.filter(status=2)
-   
     # tickets = Ticket.objects.filter(status=2)
     dic = {
         'tickets':tickets,
@@ -315,7 +328,6 @@ def resolvedticketslist(request):
         tickets =  tickets = Ticket.objects.filter(status=3)
     if str(request.user.groups.all()[0]) == 'operator':
         tickets = request.user.operator.ticket_set.filter(status=3)
-   
     # tickets = Ticket.objects.filter(status=3)
     dic = {
         'tickets':tickets,
