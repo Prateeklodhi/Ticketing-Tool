@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col">
         <div class="col-md">
-            <div class="card text-center text-white mb-3" id="total-orders">
+            <div class="card text-center text-white mb-3" >
                 <div class="card-header" style="background-color: rgb(10, 75, 75);">
                     <h5 class="card-title">Total Ticket</h5>
                 </div>
@@ -16,22 +16,22 @@
 
     <div class="col">
         <div class="col-md">
-            <dic class="card text-center text-white mb-3" id="orders-delivered">
+            <div class="card text-center text-white mb-3" >
                 <div class="card-header" style="background-color: rgb(10, 75, 75);">
                     <div class="card-title">
                         <h5 class="card-title"> Ticket Closed</h5>
                     </div>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title" style="color: black;">{{ticket_closed}}</h5>
+                    <h5 class="card-title" style="color: rgb(0, 0, 0);">{{ticket_closed}}</h5>
                 </div>
-            </dic>
+            </div>
         </div>
     </div>
 
     <div class="col">
         <div class="col-md">
-            <dic class="card text-center text-white mb-3" id="orders-pending">
+            <div class="card text-center text-white mb-3" >
                 <div class="card-header" style="background-color: rgb(10, 75, 75);">
                     <div class="card-title">
                         <h5 class="card-title"> Ticket Open</h5>
@@ -42,7 +42,7 @@
                         {{ticket_open}}
                     </h5>
                 </div>
-            </dic>
+            </div>
         </div>
     </div>
 
@@ -50,7 +50,7 @@
 <div class="row">
     <div class="col">
         <div class="col-md">
-            <div class="card text-center text-white mb-3" id="total-orders">
+            <div class="card text-center text-white mb-3" >
                 <div class="card-header" style="background-color: rgb(10, 75, 75);">
                     <h5 class="card-title">Ticket Reopened</h5>
                 </div>
@@ -63,7 +63,7 @@
 
     <div class="col">
         <div class="col-md">
-            <dic class="card text-center text-white mb-3" id="orders-delivered">
+            <div class="card text-center text-white mb-3" >
                 <div class="card-header" style="background-color: rgb(10, 75, 75);">
                     <div class="card-title">
                         <h5 class="card-title"> Ticket Resolved </h5>
@@ -72,21 +72,50 @@
                 <div class="card-body">
                     <h5 class="card-title" style="color: black;">{{ticket_resolved}}</h5>
                 </div>
-            </dic>
+            </div>
         </div>
     </div>
     <div class="col">
         <div class="col-md">
-            <div class="card text-center text-white mb-3" id="orders-pending">
+            <div class="card text-center text-white mb-3" >
                 <div class="card-header" style="background-color: rgb(10, 75, 75);">
                     <div class="card-title">
-                        <h5 class="card-title">Ticket Duplicate</h5>
+                        <h5 class="card-title"> Nidan Tickets</h5>
                     </div>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">
-                        <h5 class="card-title"style="color: black;">{{ticket_duplicate}}</h5>
-                    </h5>
+                    <h5 class="card-title" style="color: black;">{{nidan_tickets}}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+</div>
+<div class="row">
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-white mb-3" >
+                <div class="card-header" style="background-color: rgb(10, 75, 75);">
+                    <div class="card-title">
+                        <h5 class="card-title"> Nidan Solved</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title" style="color: black;">{{nidan_solved}}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="col-md">
+            <div class="card text-center text-white mb-3" >
+                <div class="card-header" style="background-color: rgb(10, 75, 75);">
+                    <div class="card-title">
+                        <h5 class="card-title"> Nidan Pending</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title" style="color: black;">{{nidan_pending}}</h5>
                 </div>
             </div>
         </div>

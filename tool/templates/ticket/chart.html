@@ -1,63 +1,43 @@
 {% block content %}
-<h3 class="text-center">Chart Details</h3>
-<section class="chart_section container m-5  row justify-content-between">
+<div id="main_chart" style="width: 100%;height:450px;"></div>
+<input type="hidden" id="total-ticket" value="{{total_ticket}}">
+<input type="hidden" id="ticket-open" value="{{ticket_open}}">
+<input type="hidden" id="ticket-resolved" value="{{ticket_resolved}}">
+<input type="hidden" id="ticket-reopened" value="{{ticket_reopened}}">
+<input type="hidden" id="ticket-closed" value="{{ticket_closed}}">
+<input type="hidden" id="nidan-tickets" value="{{nidan_tickets}}">
+<input type="hidden" id="nidan-pending" value="{{nidan_pending}}">
+<input type="hidden" id="nidan-solved" value="{{nidan_solved}}">
 
-  <div class="inner_chart col-12 col-lg-6 ">
-    <div class="Total_details">
-      <h5>
-        Total Tickets:<p class="ml-5"> {{total_ticket}}</p>
-    </div>
-    </h5>
-    <div class="col-12 col-lg-6 bar_chart">
-      <div class="single_chart m-2" style="--i:100">
-        <!-- <p>Open Tickets</p> -->
-        <h6>{{ticket_open}}%</h6>
-      </div>
+<script type="text/javascript">
+let totalcount = parseInt(document.getElementById('total-ticket').value);
+let ticketopen = parseInt(document.getElementById('ticket-open').value);
+let ticketresolved = parseInt(document.getElementById('ticket-resolved').value);
+let ticketreopened = parseInt(document.getElementById('ticket-reopened').value);
+let ticketclosed = parseInt(document.getElementById('ticket-closed').value);
+let nidantickets = parseInt(document.getElementById('nidan-tickets').value);
+let nidanpending = parseInt(document.getElementById('nidan-pending').value);
+let nidansolved = parseInt(document.getElementById('nidan-solved').value);
+var chartDom = document.getElementById('main_chart');
+var myChart = echarts.init(chartDom);
+var option;
 
-      <div class="single_chart m-2" style="--i:50">
-        <!-- <p>Close Tickets</p> -->
-        <h6>{{ticket_closed}}%</h6>
-      </div>
-      <div class="single_chart m-2" style="--i:30">
-        <!-- <p>Resolved Tickets</p> -->
-        <h6>{{ticket_resolved}}%</h6>
-      </div>
-      <div class="single_chart m-2" style="--i:30">
-        <!-- <p>Nidan Solved Tickets</p> -->
-        <h6>{{ticket_resolved}}%</h6>
-      </div>
-      <div class="single_chart m-2" style="--i:30">
-        <!-- <p>Open Nidan Tickets</p> -->
-        <h6>{{ticket_resolved}}%</h6>
+option = {
+  xAxis: {
+    type: 'category',
+    data: ['Total', 'Open', 'Resolved', 'Reopen', 'Closed','Nidan Tickets','Nidan Solved','Nidan Pending']
+  },
+  yAxis: {
+    type: 'value'
+  },
+  series: [
+    {
+      data: [totalcount,ticketopen,ticketresolved,ticketreopened,ticketclosed,nidantickets,nidansolved,nidanpending],
+      type: 'bar'
+    }
+  ]
+};
 
-      </div>
-    </div>
-  </div>
-  <div class="details col-12 col-lg-6 mt-5">
-    <div class="color_boxes">
-      <div class="single_color_box">
-        <span></span>
-        <p>Open Tickets</p>
-      </div>
-      <div class="single_color_box">
-        <span></span>
-        <p>Close Tickets</p>
-      </div>
-      <div class="single_color_box">
-        <span></span>
-        <p>Resolved Tickets</p>
-      </div>
-      <div class="single_color_box">
-        <span></span>
-        <p>Nidan Solved Tickets</p>
-      </div>
-      <div class="single_color_box">
-        <span></span>
-        <p>Open Nidan Tickets</p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
+option && myChart.setOption(option);
+</script>
 {% endblock %}

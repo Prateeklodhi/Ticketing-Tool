@@ -9,7 +9,15 @@ Home
 {% block content %}
 {% include 'ticket\messages.html'%}
 {% include 'ticket\status.html' %}
-{% include 'ticket\chart.html' %}
+<h3 class="text-center">Chart View</h3>
+
+    <div class="row">
+        {% include 'ticket\chart.html' %}
+    </div>
+    <div class="row">
+        {% include 'ticket\piechart.html'%}
+    </div>
+
 {% endblock content %}
 
 {% block script %}

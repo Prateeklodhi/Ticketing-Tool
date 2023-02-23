@@ -14,6 +14,18 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import NidanSolvedSerializer
 
+def ajax_trial(request):
+    my_objects = json.loads(request.GET.get('my_objects', '[]')) # Retrieve the filtered objects from the request data
+    # Process the data and return a JsonResponse
+    data = {'my_object': my_objects}
+    return JsonResponse(data)
+
+def my_temp(request):
+    tickets = Ticket.objects.all()
+    dic = {
+        'tickets':tickets
+    }
+    return render(request,'ticket/trial.html',dic)
 # Create your views here.
 @unauthorized_user
 def loginuser(request):
@@ -155,6 +167,17 @@ def nidan_solved_data(request):
     return render(request,'ticket/nidan_solved_tickets.html',dic)
 
 
+#to search docket number. 
+@login_required(login_url='login')
+def nidan_search(request):
+    query = request.GET.get('query') if request.GET.get('query') != None else ''
+    nidan_tickets = NidanTicket.objects.filter(Q(docket_number__icontains=query))
+    dic = {
+        'nidan_tickets':nidan_tickets,
+    }
+    return render(request,'ticket/nidan_all_tickets.html',dic)
+
+
 #this api will return all the sovled docket number 
 @api_view(['GET'])
 def nidanSolvedList(request):
@@ -192,16 +215,20 @@ def index(request):
         ticket_resolved = tickets.filter(status=3).count()
         ticket_closed = tickets.filter(status=4).count()
         ticket_duplicate = tickets.filter(status=5).count()
-    dic = {
-        'section':'index',
+    nidan_tickets = NidanTicket.objects.all().count()
+    nidan_pending = NidanTicket.objects.filter(status='pending').count()
+    nidan_solved = NidanTicket.objects.filter(status='solved').count()
+    data = {
         'ticket_open': ticket_open,
         'ticket_closed': ticket_closed,
         'total_ticket': total_ticket,
         'ticket_reopened': ticket_reopened,
-        'ticket_duplicate': ticket_duplicate,
         'ticket_resolved': ticket_resolved,
+        'nidan_tickets':nidan_tickets,
+        'nidan_pending':nidan_pending,
+        'nidan_solved':nidan_solved,
     }
-    return render(request, 'ticket/home.html',dic)
+    return render(request, 'ticket/home.html',data)
 
 
 @login_required(login_url='login')
@@ -256,5 +283,54 @@ def allTicket(request):
     return render(request, 'ticket/alltickets.html', {'tickets': tickets})
 
 
+@login_required(login_url='login')
+def openticketslist(request):
+    if str(request.user.groups.all()[0]) == 'admin':
+        tickets =  tickets = Ticket.objects.filter(status=1)
+    if str(request.user.groups.all()[0]) == 'operator':
+        tickets = request.user.operator.ticket_set.filter(status=1)
+    dic = {
+        'tickets':tickets,
+    }
+    return render(request,'ticket/open_tickets.html',dic)
 
 
+@login_required(login_url='login')
+def reopenticketslist(request):
+    if str(request.user.groups.all()[0]) == 'admin':
+        tickets =  tickets = Ticket.objects.filter(status=2)
+    if str(request.user.groups.all()[0]) == 'operator':
+        tickets = request.user.operator.ticket_set.filter(status=2)
+   
+    # tickets = Ticket.objects.filter(status=2)
+    dic = {
+        'tickets':tickets,
+    }
+    return render(request,'ticket/reopen_tickets.html',dic)
+
+
+@login_required(login_url='login')
+def resolvedticketslist(request):
+    if str(request.user.groups.all()[0]) == 'admin':
+        tickets =  tickets = Ticket.objects.filter(status=3)
+    if str(request.user.groups.all()[0]) == 'operator':
+        tickets = request.user.operator.ticket_set.filter(status=3)
+   
+    # tickets = Ticket.objects.filter(status=3)
+    dic = {
+        'tickets':tickets,
+    }
+    return render(request,'ticket/resolved_tickets.html',dic)
+
+
+@login_required(login_url='login')
+def closeticketslist(request):
+    if str(request.user.groups.all()[0]) == 'admin':
+        tickets =  tickets = Ticket.objects.filter(status=4)
+    if str(request.user.groups.all()[0]) == 'operator':
+        tickets = request.user.operator.ticket_set.filter(status=4)
+    # tickets = Ticket.objects.filter(status=4)
+    dic = {
+        'tickets':tickets,
+    }
+    return render(request,'ticket/close_tickets.html',dic)
