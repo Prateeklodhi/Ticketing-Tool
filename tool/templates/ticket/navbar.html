@@ -15,11 +15,11 @@
                 <a class="nav-link" href="{% url 'create_ticket' %}">Add Ticket</a>
             </li>
             <li class="nav-item active">
-                 <a class="nav-link" href="{% url 'all_tickets' %}">Show All Ticket</a>
+                <a class="nav-link" href="{% url 'all_tickets' %}">Show Tickets</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'api_nidan' %}">All Nidan Ticket</a>
-           </li>
+                <a class="nav-link" href="{% url 'api_nidan' %}">Nidan Tickets</a>
+            </li>
         </ul>
         {% endif %}
         <div class="d-flex" role="search">
@@ -43,7 +43,7 @@
                 {% else %}
 
                 {% endif %}
-            </span>.
+            </span>
         </div>
     </div>
 </nav>

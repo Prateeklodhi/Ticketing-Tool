@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import TicketForm, UserRegistrationForm, OperatorProfile, NidanForm
 from .models import Ticket, Operator, NidanTicket
 from django.contrib.auth import authenticate, login, logout
@@ -7,17 +7,14 @@ from django.contrib.auth.decorators import login_required
 import requests
 from django.contrib import messages
 from .forms import UserRegistrationForm
-from django.contrib.auth.models import Group
 from .decorators import unauthorized_user, allowed_users, admin_only
-from django.core.paginator import Paginator
 import json
+from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import NidanSolvedSerializer
-
+from django.core.mail import send_mail
 # Create your views here.
-
-
 @unauthorized_user
 def loginuser(request):
     if request.method == 'POST':
@@ -31,7 +28,7 @@ def loginuser(request):
             return redirect('index')
         else:
             messages.error(request, 'username or password might be wrong.')
-    return render(request, 'registration/login.html')
+    return render(request, 'credential/login.html')
 
 
 def logoutuser(request):
@@ -41,20 +38,31 @@ def logoutuser(request):
 
 
 @allowed_users(allowed_roles=['admin',])
-def register(request):
+def registeruser(request):
     form = UserRegistrationForm()
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            first = form.cleaned_data.get('first_name')
+            last = form.cleaned_data.get('last_name')
+            password = form.cleaned_data.get('password1')
             username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            send_mail(
+                ('Gloitel Ticketing tool credential of '+first+''+last+'.'),
+                str('Hey '+first+''+last+'. Your username is '+username+' and your password is '+password+'.'),
+                'gloitelticketing@gmail.com',
+                [email],
+                fail_silently=False,
+            )
             messages.success(
-                request, 'Account Created Successfully For '+username)
+                request, 'Account Created Successfully For '+first+' '+last+', Mail has been sent.')
             return redirect('index')
     dic = {
         'user_form': form,
     }
-    return render(request, 'registration/register.html', dic)
+    return render(request, 'credential/register.html', dic)
 
 
 @login_required(login_url='login')
@@ -113,39 +121,65 @@ def api_nidan(request): # to retrive all the nidan api data and store it in to t
     else:
         messages.warning(
             request, 'All data have been fatched from the Nidan Api')
-    nidan_tickets = NidanTicket.objects.filter(status='pending')
+    nidan_ticket = NidanTicket.objects.all()
+    query = request.GET.get('query') if request.GET.get(
+        'query') != None else ''
+    nidan_tickets = nidan_ticket.filter(
+        Q(docket_number__icontains=query) 
+    )
     dic = {
         'nidan_tickets': nidan_tickets,
     }
-    return render(request, 'ticket/api_html.html', dic)
+    return render(request, 'ticket/nidan_all_tickets.html', dic)
+
+
+@login_required(login_url='login')
+def nidanTicketData(request,pk):
+    nidan_instance = get_object_or_404(NidanTicket,id=pk)
+    nidan_form = NidanForm(request.POST or None,instance=nidan_instance)
+    if nidan_form.is_valid():
+        nidan_form_status = nidan_form.save(commit=False)
+        if nidan_form_status.status == 'solved':
+            nidan_form_status.save()
+            messages.success(request,'Docket for '+ str(nidan_instance)+" is solved now.")
+            return redirect('api_nidan')
+        else:
+            messages.warning(request,'No changes detacted.')
+    dic = {
+        'nidan_form':nidan_form,
+        'nidan_instance':nidan_instance,
+    }
+    return render(request,'ticket/nidan_form.html',dic)
+
+
+@login_required(login_url='login')
+def nidan_pending_data(request):
+    nidan_tickets = NidanTicket.objects.filter(status='pending')
+    dic = {
+         'nidan_tickets': nidan_tickets,
+    }
+    return render(request,'ticket/nidan_pending_tickets.html',dic)
+
 
 # to show all the solved data of the nidan api
 @login_required(login_url='login')
-def show_nidan_data(request):
-    nidan_solved = NidanTicket.objects.filter(status='solved')
+def nidan_solved_data(request):
+    nidan_tickets = NidanTicket.objects.filter(status='solved')
     dic = {
-        'nidan_solved':nidan_solved
+        'nidan_tickets': nidan_tickets,
     }
-    return 
+    return render(request,'ticket/nidan_solved_tickets.html',dic)
 
+
+#to search docket number. 
 @login_required(login_url='login')
-def nidan_ticket_data(request, nidan_id):
-    nidan_ticket = NidanTicket.objects.get(id=nidan_id)
-    nidan_form = NidanForm(instance=nidan_ticket)
-    if request.method == 'POST':
-        nidan_form = NidanForm(request.POST, instance=nidan_ticket)
-        if nidan_form.is_valid():
-            new_nidan_form = nidan_form.save(commit=False)
-            if new_nidan_form.status == 'solved':
-                new_nidan_form.save()
-                messages.success(request,'Docket Number '+ str(nidan_ticket)+' is solved.')
-                return redirect('api_nidan')
-            else:
-                messages.warning(request,'No changes found.')
+def nidan_search(request):
+    query = request.GET.get('query') if request.GET.get('query') != None else ''
+    nidan_tickets = NidanTicket.objects.filter(Q(docket_number__icontains=query))
     dic = {
-        'nidan_form': nidan_form
+        'nidan_tickets':nidan_tickets,
     }
-    return render(request, 'ticket/nidan_form.html', dic)
+    return render(request,'ticket/nidan_all_tickets.html',dic)
 
 
 #this api will return all the sovled docket number 
@@ -164,6 +198,16 @@ def nidanSolvedDetail(request,dcnum):
     nidanserializer = NidanSolvedSerializer(Nidansolvedticket,many=False)
     return Response(nidanserializer.data)
 
+
+@login_required(login_url='login')
+def searchnidan(request):
+    nidan_ticket = NidanTicket.objects.all()
+    query = request.GET.get('query') if request.GET.get(
+        'query') != None else ''
+    tickets = nidan_ticket.filter(
+        Q(docket_number__icontains=query) 
+    )
+    return render(request, 'ticket/nidan_all_tickets.html', {'tickets': tickets})
 
 #this is the home page of ticketing tool webapplication allowed user for this page are admin and operator.
 @login_required(login_url='login')
@@ -185,16 +229,20 @@ def index(request):
         ticket_resolved = tickets.filter(status=3).count()
         ticket_closed = tickets.filter(status=4).count()
         ticket_duplicate = tickets.filter(status=5).count()
-    dic = {
-        'section':'index',
+    nidan_tickets = NidanTicket.objects.all().count()
+    nidan_pending = NidanTicket.objects.filter(status='pending').count()
+    nidan_solved = NidanTicket.objects.filter(status='solved').count()
+    data = {
         'ticket_open': ticket_open,
         'ticket_closed': ticket_closed,
         'total_ticket': total_ticket,
         'ticket_reopened': ticket_reopened,
-        'ticket_duplicate': ticket_duplicate,
         'ticket_resolved': ticket_resolved,
+        'nidan_tickets':nidan_tickets,
+        'nidan_pending':nidan_pending,
+        'nidan_solved':nidan_solved,
     }
-    return render(request, 'ticket/home.html',dic)
+    return render(request, 'ticket/home.html',data)
 
 
 @login_required(login_url='login')
@@ -207,8 +255,7 @@ def createTicket(request):
             new_form = ticket_form.save(commit=False)
             new_form.created_by = request.user.operator
             new_form.save()
-            messages.success(request, 'Ticket created succfully for ' +
-                             str(new_form.first_name+" "+new_form.last_name+'.'))
+            messages.success(request, 'Ticket created succfully for ' +str(new_form.first_name+" "+new_form.last_name+'.'))
             return redirect('all_tickets')
     return render(request, 'ticket/ticket.html', {'ticket_form': ticket_form})
 
@@ -247,8 +294,55 @@ def allTicket(request):
         Q(contact__icontains=query) |
         Q(first_name__icontains=query)
     )
-    return render(request, 'ticket/allticket.html', {'tickets': tickets})
+    return render(request, 'ticket/alltickets.html', {'tickets': tickets})
 
 
+@login_required(login_url='login')
+def openticketslist(request):
+    if str(request.user.groups.all()[0]) == 'admin':
+        tickets =  tickets = Ticket.objects.filter(status=1)
+    if str(request.user.groups.all()[0]) == 'operator':
+        tickets = request.user.operator.ticket_set.filter(status=1)
+    dic = {
+        'tickets':tickets,
+    }
+    return render(request,'ticket/open_tickets.html',dic)
 
 
+@login_required(login_url='login')
+def reopenticketslist(request):
+    if str(request.user.groups.all()[0]) == 'admin':
+        tickets =  tickets = Ticket.objects.filter(status=2)
+    if str(request.user.groups.all()[0]) == 'operator':
+        tickets = request.user.operator.ticket_set.filter(status=2)
+    # tickets = Ticket.objects.filter(status=2)
+    dic = {
+        'tickets':tickets,
+    }
+    return render(request,'ticket/reopen_tickets.html',dic)
+
+
+@login_required(login_url='login')
+def resolvedticketslist(request):
+    if str(request.user.groups.all()[0]) == 'admin':
+        tickets =  tickets = Ticket.objects.filter(status=3)
+    if str(request.user.groups.all()[0]) == 'operator':
+        tickets = request.user.operator.ticket_set.filter(status=3)
+    # tickets = Ticket.objects.filter(status=3)
+    dic = {
+        'tickets':tickets,
+    }
+    return render(request,'ticket/resolved_tickets.html',dic)
+
+
+@login_required(login_url='login')
+def closeticketslist(request):
+    if str(request.user.groups.all()[0]) == 'admin':
+        tickets =  tickets = Ticket.objects.filter(status=4)
+    if str(request.user.groups.all()[0]) == 'operator':
+        tickets = request.user.operator.ticket_set.filter(status=4)
+    # tickets = Ticket.objects.filter(status=4)
+    dic = {
+        'tickets':tickets,
+    }
+    return render(request,'ticket/close_tickets.html',dic)
