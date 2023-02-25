@@ -1,0 +1,41 @@
+
+.inner_pdf_design
+{
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo
+{
+    width: 50%;
+}
+.logo>.img
+{
+    width: 200px;
+    height: 100px;
+    background: url('../logo/gloitel.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.date_range>h6
+{
+    width:100%;
+}
+.pdf-table
+{
+    width: 100%;
+    margin-top: 20px;
+}
+.pdf-table .table
+{
+    width: 100%;
+}
+.pdf-table .table>thead>tr>th{
+    font-size: 13px;
+    font-weight: 800 !important;
+}
+.pdf-table .table>tbody{
+    font-size: 12px;
+}
