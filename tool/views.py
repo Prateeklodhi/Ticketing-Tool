@@ -413,3 +413,4 @@ def generate_ticket_all_pdf(request):
     response['Content-Disposition']=f'filename=tickets.pdf'
     weasyprint.HTML(string=html).write_pdf(response,stylesheets=[weasyprint.CSS(settings.STATIC_ROOT/'css/pdf.css')])
     return response
+
