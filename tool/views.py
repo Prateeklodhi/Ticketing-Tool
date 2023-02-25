@@ -174,11 +174,8 @@ def api_nidan(request):  # to retrive all the nidan api data and store it in to 
 @login_required(login_url='login')
 def generate_nidan_all_pdf(request):
     nidan_tickets = NidanTicket.objects.all()
-    html = render_to_string('ticket/PDFs/nidanPDF.html',{'nidan_tickets':nidan_tickets})
     current_date = datetime.date.today()
-    html = render_to_string('ticket/nidanPDF.html',{'nidan_tickets':nidan_tickets,'current_date': current_date})
-    current_date = datetime.date.today()
-    html = render_to_string('ticket/nidanPDF.html',{'nidan_tickets':nidan_tickets,'current_date': current_date})
+    html = render_to_string('ticket/PDFs/nidanPDF.html',{'nidan_tickets':nidan_tickets,'current_date': current_date})
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition']=f'filename=nidan.pdf'
     weasyprint.HTML(string=html).write_pdf(response,stylesheets=[weasyprint.CSS(settings.STATIC_ROOT/'css/pdf.css')])
@@ -407,8 +404,14 @@ def closeticketslist(request):
 
 @login_required(login_url='login')
 def generate_ticket_all_pdf(request):
-    tickets = Ticket.objects.all()
-    html = render_to_string('ticket/PDFs/ticketsPDF.html',{'tickets':tickets})
+    if str(request.user.groups.all()[0]) == 'admin':
+        tickets_object = Ticket.objects.all()
+    if str(request.user.groups.all()[0]) == 'operator':
+        tickets_object = request.user.operator.ticket_set.all()
+    current_date = datetime.date.today()
+    first_name = request.user.first_name
+    last_name =request.user.last_name 
+    html = render_to_string('ticket/PDFs/ticketPDF.html',{'tickets':tickets_object,'current_date':current_date,'first_name':first_name,'last_name':last_name})
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition']=f'filename=tickets.pdf'
     weasyprint.HTML(string=html).write_pdf(response,stylesheets=[weasyprint.CSS(settings.STATIC_ROOT/'css/pdf.css')])

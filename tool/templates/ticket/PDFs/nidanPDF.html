@@ -8,11 +8,23 @@
         </div>
         <div class="name_top col-7 text-center text-secondary">
             <h5>MUKHYA MANTRI SLUM SWASTHYA YOJANA</h5>
-            <p>Query Ticket List</p>
+            <p>Query Nidan Ticket List</p>
         </div>
         <div class="date_range col-3">
-            <h6 id="printDate"><span>Till Date - </span>{{current_date}} </h6>
             <p>Print by :</p>
+        </div>
+    </div>
+</section>
+<section class="pdf_dates container-fluid mt-3">
+    <div class="inner_pdf_dates w-100 row justify-content-center align-items-center">
+        <div class="col-4 text-left text-secondary"> 
+            <h6>From : <span>Feb 34 2016</span></h6>
+        </div>
+        <div class="col-4 text-center text-secondary">
+            <h6>To : <span>Feb 34 2016</span></h6>
+        </div>
+        <div class="col-4 text-right text-secondary">
+            <h6>Print Date: <span>{{current_date}}</span></h6>
         </div>
     </div>
 </section>
@@ -27,10 +39,7 @@
                 <th scope="col"><h6>Status</h6></th>
                 <th scope="col"><h6>Created</h6></th>
                 <th scope="col"><h6>Updated</h6></th>
-                <th scope="col"><h6>Created</h6></th>
-                <th scope="col"><h6>Updated</h6></th>
-                <th scope="col"><h6>Created</h6></th>
-                <th scope="col"><h6>Updated</h6></th>
+                </tr>
         </thead>
         <tbody>
             {% for nidan_ticket in nidan_tickets %}
@@ -38,101 +47,6 @@
                 <td>{{nidan_ticket.docket_number}}</td>
                 <td>{{nidan_ticket.citizen_name}}</td>
                 <td>{{nidan_ticket.phone}}</td>
-                <td>{{nidan_ticket.message}}</td>
-                <td>{{nidan_ticket.status}}</td>
-                <td>{{nidan_ticket.created_date}}</td>
-                <td>{{nidan_ticket.updated_date}}</td>
-                <td>{{nidan_ticket.message}}</td>
-                <td>{{nidan_ticket.status}}</td>
-                <td>{{nidan_ticket.created_date}}</td>
-                <td>{{nidan_ticket.updated_date}}</td>
-            </tr>
-            <tr>
-                <td>{{nidan_ticket.docket_number}}</td>
-                <td>{{nidan_ticket.citizen_name}}</td>
-                <td>{{nidan_ticket.phone}}</td>
-                <td>{{nidan_ticket.message}}</td>
-                <td>{{nidan_ticket.status}}</td>
-                <td>{{nidan_ticket.created_date}}</td>
-                <td>{{nidan_ticket.updated_date}}</td>
-                <td>{{nidan_ticket.message}}</td>
-                <td>{{nidan_ticket.status}}</td>
-                <td>{{nidan_ticket.created_date}}</td>
-                <td>{{nidan_ticket.updated_date}}</td>
-            </tr>
-            <tr>
-                <td>{{nidan_ticket.docket_number}}</td>
-                <td>{{nidan_ticket.citizen_name}}</td>
-                <td>{{nidan_ticket.phone}}</td>
-                <td>{{nidan_ticket.message}}</td>
-                <td>{{nidan_ticket.status}}</td>
-                <td>{{nidan_ticket.created_date}}</td>
-                <td>{{nidan_ticket.updated_date}}</td>
-                <td>{{nidan_ticket.message}}</td>
-                <td>{{nidan_ticket.status}}</td>
-                <td>{{nidan_ticket.created_date}}</td>
-                <td>{{nidan_ticket.updated_date}}</td>
-            </tr>
-            <tr>
-                <td>{{nidan_ticket.docket_number}}</td>
-                <td>{{nidan_ticket.citizen_name}}</td>
-                <td>{{nidan_ticket.phone}}</td>
-                <td>{{nidan_ticket.message}}</td>
-                <td>{{nidan_ticket.status}}</td>
-                <td>{{nidan_ticket.created_date}}</td>
-                <td>{{nidan_ticket.updated_date}}</td>
-                <td>{{nidan_ticket.message}}</td>
-                <td>{{nidan_ticket.status}}</td>
-                <td>{{nidan_ticket.created_date}}</td>
-                <td>{{nidan_ticket.updated_date}}</td>
-            </tr>
-            <tr>
-                <td>{{nidan_ticket.docket_number}}</td>
-                <td>{{nidan_ticket.citizen_name}}</td>
-                <td>{{nidan_ticket.phone}}</td>
-                <td>{{nidan_ticket.message}}</td>
-                <td>{{nidan_ticket.status}}</td>
-                <td>{{nidan_ticket.created_date}}</td>
-                <td>{{nidan_ticket.updated_date}}</td>
-                <td>{{nidan_ticket.message}}</td>
-                <td>{{nidan_ticket.status}}</td>
-                <td>{{nidan_ticket.created_date}}</td>
-                <td>{{nidan_ticket.updated_date}}</td>
-            </tr>
-            <tr>
-                <td>{{nidan_ticket.docket_number}}</td>
-                <td>{{nidan_ticket.citizen_name}}</td>
-                <td>{{nidan_ticket.phone}}</td>
-                <td>{{nidan_ticket.message}}</td>
-                <td>{{nidan_ticket.status}}</td>
-                <td>{{nidan_ticket.created_date}}</td>
-                <td>{{nidan_ticket.updated_date}}</td>
-                <td>{{nidan_ticket.message}}</td>
-                <td>{{nidan_ticket.status}}</td>
-                <td>{{nidan_ticket.created_date}}</td>
-                <td>{{nidan_ticket.updated_date}}</td>
-            </tr>
-            <tr>
-                <td>{{nidan_ticket.docket_number}}</td>
-                <td>{{nidan_ticket.citizen_name}}</td>
-                <td>{{nidan_ticket.phone}}</td>
-                <td>{{nidan_ticket.message}}</td>
-                <td>{{nidan_ticket.status}}</td>
-                <td>{{nidan_ticket.created_date}}</td>
-                <td>{{nidan_ticket.updated_date}}</td>
-                <td>{{nidan_ticket.message}}</td>
-                <td>{{nidan_ticket.status}}</td>
-                <td>{{nidan_ticket.created_date}}</td>
-                <td>{{nidan_ticket.updated_date}}</td>
-            </tr>
-            <tr>
-                <td>{{nidan_ticket.docket_number}}</td>
-                <td>{{nidan_ticket.citizen_name}}</td>
-                <td>{{nidan_ticket.phone}}</td>
-                <td>{{nidan_ticket.message}}</td>
-                <td>{{nidan_ticket.status}}</td>
-                <td>{{nidan_ticket.created_date}}</td>
-                <td>{{nidan_ticket.updated_date}}</td>
                 <td>{{nidan_ticket.message}}</td>
                 <td>{{nidan_ticket.status}}</td>
                 <td>{{nidan_ticket.created_date}}</td>
@@ -148,5 +62,4 @@
         <div class="gloitel_logo"></div>  
     </div>    
 </footer>
-
 {%endblock%}
