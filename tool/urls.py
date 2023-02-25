@@ -26,4 +26,5 @@ urlpatterns = [
     path('close-tickets/',views.closeticketslist,name='close_tickets'),
     path('create-ticket/', views.createTicket, name='create_ticket'),
     path('update-ticket/<str:pk>/', views.updateTicket, name='update_ticket'),
+    path('generate-excel/',views.generate_nidan_all_excel,name="generate_excel"),
 ]

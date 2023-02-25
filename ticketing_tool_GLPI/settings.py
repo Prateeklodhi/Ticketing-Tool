@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+import os
+os.environ['PATH'] += ';' + 'C:\\msys64\\mingw64\\bin'  # replace the path with the actual path to your MSYS2 installation
+os.environ['GI_TYPELIB_PATH'] = 'C:\\msys64\\mingw64\\lib\\girepository-1.0'  # replace the path with the actual path to your MSYS2 installation
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -124,7 +126,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 PHONENUMBER_DEFAULT_REGION = 'IN'
-
+STATIC_ROOT = BASE_DIR / 'static/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media/images')
 STATIC_URL = 'static/'
 MEDIA_URL = 'media/'

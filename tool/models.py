@@ -64,7 +64,6 @@ class Ticket(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     status = models.IntegerField(choices=STATUS_CHOICES,default=OPEN_STATUS)
-    on_hold = models.BooleanField(blank=True,default=False)
     description = models.TextField(null=True,blank=True)
     priority = models.IntegerField(choices=PRIORITY_CHOICES,default=3,blank=3)
     image = models.ImageField(upload_to='TicketProblem/%y/%m/%d/',null=True,blank=True)
