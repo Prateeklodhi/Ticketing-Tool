@@ -173,7 +173,7 @@ def api_nidan(request):  # to retrive all the nidan api data and store it in to 
 @login_required(login_url='login')
 def generate_nidan_all_excel(request):
     nidan_tickets = NidanTicket.objects.all()
-    html = render_to_string('ticket/nidanPDF.html',{'nidan_tickets':nidan_tickets})
+    html = render_to_string('ticket/PDFs/nidanPDF.html',{'nidan_tickets':nidan_tickets})
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition']=f'filename=nidan.pdf'
     weasyprint.HTML(string=html).write_pdf(response,stylesheets=[weasyprint.CSS(settings.STATIC_ROOT/'css/pdf.css')])
@@ -398,3 +398,13 @@ def closeticketslist(request):
         'tickets': tickets,
     }
     return render(request, 'ticket/close_tickets.html', dic)
+
+
+@login_required(login_url='login')
+def generate_ticket_all_pdf(request):
+    tickets = Ticket.objects.all()
+    html = render_to_string('ticket/PDFs/ticketsPDF.html',{'tickets':tickets})
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition']=f'filename=tickets.pdf'
+    weasyprint.HTML(string=html).write_pdf(response,stylesheets=[weasyprint.CSS(settings.STATIC_ROOT/'css/pdf.css')])
+    return response
