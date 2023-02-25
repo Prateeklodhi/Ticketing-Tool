@@ -1,4 +1,18 @@
-<div class="col table-responsive">
+{%extends 'base.html'%}
+{%block content%}
+<head
+<section class="pdf_design container-fluid ">
+    <div class="inner_pdf_design">
+        <div class="logo"> 
+            <div class="img"></div>
+        </div>
+        <div class="date_range ">
+            <h6 id="printDate"><span>Till Date - </span>{{current_date}} </h6>
+            <p>Print by :</p>
+        </div>
+    </div>
+</section>
+<div class="pdf-table table-responsive ">
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
@@ -25,3 +39,11 @@
         </tbody>
     </table>
 </div>
+
+<script>
+    const date = new Date();
+    document.getElementById('printDate').innerHTML=date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear();
+    console.log(date.getDate()+'/'+date.getMonth()+'/'+date.getFullYear());
+</script>
+
+{%endblock%}
