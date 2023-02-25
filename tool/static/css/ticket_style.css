@@ -190,10 +190,8 @@ body
 
 .single_color_box:nth-child(2) span
 {
-    background: rgb(3, 128, 133);
-    
+    background: rgb(3, 128, 133);    
 }
-
 .single_color_box:nth-child(3) span
 {
     background: rgb(96, 141, 238);
