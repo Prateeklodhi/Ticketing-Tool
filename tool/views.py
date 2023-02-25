@@ -172,7 +172,7 @@ def api_nidan(request):  # to retrive all the nidan api data and store it in to 
 #     return response
 
 @login_required(login_url='login')
-def generate_nidan_all_excel(request):
+def generate_nidan_all_pdf(request):
     nidan_tickets = NidanTicket.objects.all()
     html = render_to_string('ticket/PDFs/nidanPDF.html',{'nidan_tickets':nidan_tickets})
     current_date = datetime.date.today()
