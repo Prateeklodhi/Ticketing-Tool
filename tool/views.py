@@ -174,17 +174,11 @@ def api_nidan(request):  # to retrive all the nidan api data and store it in to 
 @login_required(login_url='login')
 def generate_nidan_all_excel(request):
     nidan_tickets = NidanTicket.objects.all()
-<<<<<<< HEAD
-<<<<<<< HEAD
     html = render_to_string('ticket/PDFs/nidanPDF.html',{'nidan_tickets':nidan_tickets})
-=======
     current_date = datetime.date.today()
     html = render_to_string('ticket/nidanPDF.html',{'nidan_tickets':nidan_tickets,'current_date': current_date})
->>>>>>> 092ca92de95ad60957951e0ac45c10c9c6289cfa
-=======
     current_date = datetime.date.today()
     html = render_to_string('ticket/nidanPDF.html',{'nidan_tickets':nidan_tickets,'current_date': current_date})
->>>>>>> 092ca92de95ad60957951e0ac45c10c9c6289cfa
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition']=f'filename=nidan.pdf'
     weasyprint.HTML(string=html).write_pdf(response,stylesheets=[weasyprint.CSS(settings.STATIC_ROOT/'css/pdf.css')])
