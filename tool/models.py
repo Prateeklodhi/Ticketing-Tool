@@ -21,6 +21,15 @@ class Operator(models.Model):
         return str(self.user)
 
 
+class AreaProjectManager(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE,null=True)
+    username = models.CharField(max_length=100,null=False,blank=False)
+    first_name = models.CharField(max_length=50,null=True,blank=False)
+    last_name = models.CharField(max_length=50,null=True,blank=False)
+    phonenumber = PhoneNumberField(region='IN',max_length=13)
+    address = models.TextField(null=True,blank=True)
+    MMU_name = models.CharField(null=True,blank=True,max_length=50) 
+
 
 class Ticket(models.Model):
     OPEN_STATUS = 1 
@@ -84,7 +93,6 @@ class NidanTicket(models.Model):
         ('pending',_('pending')),
         ('solved',_('solved')),
         )
-
     docket_number = models.CharField(max_length=20,null=True,unique=True)
     citizen_name = models.CharField(max_length=50,null=True)
     phone = models.CharField(max_length=13,null=True)
@@ -96,7 +104,7 @@ class NidanTicket(models.Model):
     subsection = models.CharField(max_length=50,null=True)
     status = models.CharField(choices=STATUS,null=True,max_length=100,default='pending')
     grievance_remark = models.CharField(max_length=500,null=True)
-    callstart  = models.CharField(max_length=200,null= True)
+    remark = models.TextField(null=True,blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 

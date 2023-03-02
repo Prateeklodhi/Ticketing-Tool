@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import TicketForm, UserRegistrationForm, OperatorProfile, NidanForm
-from .models import Ticket, Operator, NidanTicket
+from .forms import TicketForm, UserRegistrationForm, OperatorProfile, NidanForm, AreaProjectManagerForm
+from .models import Ticket, Operator, NidanTicket, AreaProjectManager
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
@@ -17,6 +17,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 import weasyprint
 import datetime
+from twilio.rest import Client
 # Create your views here.
 @unauthorized_user
 def loginuser(request):
@@ -42,7 +43,7 @@ def logoutuser(request):
 
 @allowed_users(allowed_roles=['admin',])
 def registeruser(request):
-    form = UserRegistrationForm()
+    form = UserRegistrationForm()                                             
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
@@ -67,6 +68,23 @@ def registeruser(request):
         'user_form': form,
     }
     return render(request, 'credential/register.html', dic)
+
+@login_required(login_url='login')
+def createAPM(request): 
+    apm_form = AreaProjectManagerForm()
+    if request.method=='POST':
+        apm_form = AreaProjectManagerForm(request.POST)
+        if apm_form.is_valid():
+            apm_form.save()
+            send_mail(
+                ('Gloitel Ticketing tool credential of '+apm_form.first_name+''+apm_form.last_name+'.'),
+                str('Hey '+first+''+last+'. Your username is ' +
+                    username+' and your password is '+password+'.'+' Login to 192.168.1.7:8000'),
+                'gloitelticketing@gmail.com',
+                [email],
+                fail_silently=False,
+            )
+    return render(request,'create_APM.html',{'apm_form':apm_form})
 
 
 @login_required(login_url='login')
@@ -114,7 +132,6 @@ def api_nidan(request):  # to retrive all the nidan api data and store it in to 
                 subsection=glpi_client['subsection'],
                 status=glpi_client['status'],
                 grievance_remark=glpi_client['grievanceRemarks'],
-                callstart=glpi_client['callStart'],
             )
             try:
                 client.save()
