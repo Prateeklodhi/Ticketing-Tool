@@ -29,9 +29,11 @@ class OperatorProfile(ModelForm):
 
 class UserRegistrationForm(UserCreationForm):
       class Meta:
-        model =User 
-        fields = ['username','first_name','last_name','email']
-
+        model =User  
+        fields = ['username','first_name','last_name','email','is_staff',]
+        widgets = {
+            
+        }
 
 class TicketForm(ModelForm):
     class Meta:

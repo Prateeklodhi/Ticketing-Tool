@@ -28,4 +28,5 @@ urlpatterns = [
     path('update-ticket/<str:pk>/', views.updateTicket, name='update_ticket'),
     path('generate-nidan-pdf/',views.generate_nidan_all_pdf,name="generate_nidan_pdf"),
     path('generate-ticket-pdf',views.generate_ticket_all_pdf,name='generate_ticket_pdf'),
+    path('dashboard',views.apmDashboard,name='apm_dashboard'),
 ]

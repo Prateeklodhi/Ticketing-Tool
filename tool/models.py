@@ -2,9 +2,10 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 
 class Operator(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE,null=True)
+    user = models.OneToOneField(User,on_delete=models.CASCADE,null=True,related_name='ticket_operator')
     first_name = models.CharField(max_length=20,null=True,blank=False)
     last_name = models.CharField(max_length=20,null=True,blank=False)
     profile_pic = models.ImageField(upload_to='ProfilePicture/%y/%m/%d',null= True,blank=True)
@@ -17,18 +18,32 @@ class Operator(models.Model):
         indexes = [
             models.Index(fields=['date_created'])
         ]
+
     def __str__(self) -> str:
         return str(self.user)
 
 
 class AreaProjectManager(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE,null=True)
-    username = models.CharField(max_length=100,null=False,blank=False)
+    user = models.OneToOneField(User,on_delete=models.CASCADE,null=True,related_name='ticket_APM')
+    profile_pic = models.ImageField(upload_to='ProfilePicture/%y/%m/%d',null= True,blank=True)
     first_name = models.CharField(max_length=50,null=True,blank=False)
     last_name = models.CharField(max_length=50,null=True,blank=False)
     phonenumber = PhoneNumberField(region='IN',max_length=13)
     address = models.TextField(null=True,blank=True)
-    MMU_name = models.CharField(null=True,blank=True,max_length=50) 
+    MMU_name = models.CharField(null=True,blank=True,max_length=50)
+    email = models.EmailField(max_length=200,null=True,blank=False)
+    date_created = models.DateTimeField(auto_now_add=True,null=True)
+    date_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['date_created']
+        indexes = [
+            models.Index(fields=['date_created'])
+        ]
+
+    def __str__(self) -> str:
+        return str(self.user)
+
 
 
 class Ticket(models.Model):
@@ -107,6 +122,7 @@ class NidanTicket(models.Model):
     remark = models.TextField(null=True,blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+
 
     class Meta:
         ordering = ['created_date']
