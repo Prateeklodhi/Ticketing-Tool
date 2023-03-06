@@ -27,7 +27,7 @@
                 {% if request.user.is_authenticated %}
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
-                    <img {% if request.user.operator.profile_pic %} src="{{request.user.operator.profile_pic.url}}" {%
+                    <img {% if request.user.ticket_operator.profile_pic %} src="{{request.user.ticket_operator.profile_pic.url}}" {%
                         else %} src="{% static 'images/profile.png' %}" {% endif %}
                         alt="{{form.user.operator.first_name}}" style="width: 30px;height: 30px; border-radius: 50%;
                     background-size: cover;

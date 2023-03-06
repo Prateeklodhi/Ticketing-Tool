@@ -4,4 +4,4 @@ from .models import NidanTicket
 class NidanSolvedSerializer(serializers.ModelSerializer):
     class Meta:
         model = NidanTicket
-        fields = ['docket_number','citizen_name','phone','status','created_date','updated_date']
+        fields = ['id','docket_number','citizen_name','phone','remark','status','created_date','updated_date']

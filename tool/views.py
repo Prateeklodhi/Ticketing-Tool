@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import TicketForm, UserRegistrationForm, OperatorProfile, NidanForm
-from .models import Ticket, Operator, NidanTicket
+from .forms import TicketForm, UserRegistrationForm, OperatorProfile, NidanForm, AreaProjectManagerForm
+from .models import Ticket, Operator, NidanTicket, AreaProjectManager
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
@@ -26,9 +26,16 @@ def loginuser(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            messages.success(
-                request, 'Welcome, you have been logged in successfully.')
-            return redirect('index')
+            if user.groups.filter(name='apm'):
+                    print('Here I am in APM Block')
+                    messages.success(
+                        request, 'Welcome, you have been logged in successfully.')
+                    return redirect('apm_dashboard')
+            else:
+                    print('Here I am in Operator And Admin Block')
+                    messages.success(
+                        request, 'Welcome, you have been logged in successfully.')
+                    return redirect('index')
         else:
             messages.error(request, 'username or password might be wrong.')
     return render(request, 'credential/login.html')
@@ -42,7 +49,7 @@ def logoutuser(request):
 
 @allowed_users(allowed_roles=['admin',])
 def registeruser(request):
-    form = UserRegistrationForm()
+    form = UserRegistrationForm()                                             
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
@@ -67,6 +74,12 @@ def registeruser(request):
         'user_form': form,
     }
     return render(request, 'credential/register.html', dic)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['apm',])
+def apmDashboard(request): 
+    
+    return render(request,'ticket/APM/dashboardAPM.html')
 
 
 @login_required(login_url='login')
@@ -114,7 +127,6 @@ def api_nidan(request):  # to retrive all the nidan api data and store it in to 
                 subsection=glpi_client['subsection'],
                 status=glpi_client['status'],
                 grievance_remark=glpi_client['grievanceRemarks'],
-                callstart=glpi_client['callStart'],
             )
             try:
                 client.save()
@@ -172,13 +184,10 @@ def api_nidan(request):  # to retrive all the nidan api data and store it in to 
 #     return response
 
 @login_required(login_url='login')
-def generate_nidan_all_excel(request):
+def generate_nidan_all_pdf(request):
     nidan_tickets = NidanTicket.objects.all()
-    html = render_to_string('ticket/PDFs/nidanPDF.html',{'nidan_tickets':nidan_tickets})
     current_date = datetime.date.today()
-    html = render_to_string('ticket/nidanPDF.html',{'nidan_tickets':nidan_tickets,'current_date': current_date})
-    current_date = datetime.date.today()
-    html = render_to_string('ticket/nidanPDF.html',{'nidan_tickets':nidan_tickets,'current_date': current_date})
+    html = render_to_string('ticket/PDFs/nidanPDF.html',{'nidan_tickets':nidan_tickets,'current_date': current_date})
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition']=f'filename=nidan.pdf'
     weasyprint.HTML(string=html).write_pdf(response,stylesheets=[weasyprint.CSS(settings.STATIC_ROOT/'css/pdf.css')])
@@ -273,8 +282,11 @@ def searchnidan(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['operator', 'admin'])
+@allowed_users(allowed_roles=['operator', 'admin','apm'])
 def index(request):
+    if str(request.user.groups.all()[0]) == 'apm':
+        print('Hey')
+        return redirect('apm_dashboard')
     if str(request.user.groups.all()[0]) == 'admin':
         tickets = Ticket.objects.all()
         total_ticket = tickets.count()
@@ -282,13 +294,15 @@ def index(request):
         ticket_reopened = tickets.filter(status=2).count()
         ticket_resolved = tickets.filter(status=3).count()
         ticket_closed = tickets.filter(status=4).count()
-    if str(request.user.groups.all()[0]) == 'operator':
-        tickets = request.user.operator.ticket_set.all()
+    elif str(request.user.groups.all()[0]) == 'operator':
+        tickets = request.user.ticket_operator.ticket_set.all()    
         total_ticket = tickets.count()
         ticket_open = tickets.filter(status=1).count()
         ticket_reopened = tickets.filter(status=2).count()
         ticket_resolved = tickets.filter(status=3).count()
         ticket_closed = tickets.filter(status=4).count()
+    else:
+        print('wrong')
     nidan_tickets = NidanTicket.objects.all().count()
     nidan_pending = NidanTicket.objects.filter(status='pending').count()
     nidan_solved = NidanTicket.objects.filter(status='solved').count()
@@ -313,7 +327,7 @@ def createTicket(request):
         ticket_form = TicketForm(request.POST)
         if ticket_form.is_valid():
             new_form = ticket_form.save(commit=False)
-            new_form.created_by = request.user.operator
+            new_form.created_by = request.user.ticket_operator
             new_form.save()
             messages.success(request, 'Ticket created succfully for ' +
                              str(new_form.first_name+" "+new_form.last_name+'.'))
@@ -334,7 +348,7 @@ def updateTicket(request, pk):
         ticket_form = TicketForm(request.POST, instance=ticket)
         if ticket_form.is_valid():
             new_form = ticket_form.save(commit=False)
-            new_form.created_by = request.user.operator
+            new_form.created_by = request.user.ticket_operator
             new_form.save()
             messages.success(request, 'Ticket updated succfully for ' + str(new_form.first_name+" "+new_form.last_name+'.'))
             return redirect('all_tickets')
@@ -347,7 +361,7 @@ def allTicket(request):
     if str(request.user.groups.all()[0]) == 'admin':
         tickets_object = Ticket.objects.all()
     if str(request.user.groups.all()[0]) == 'operator':
-        tickets_object = request.user.operator.ticket_set.all()
+        tickets_object = request.user.ticket_operator.ticket_set.all()
     query = request.GET.get('query') if request.GET.get(
         'query') != None else ''
     tickets = tickets_object.filter(
@@ -362,7 +376,7 @@ def openticketslist(request):
     if str(request.user.groups.all()[0]) == 'admin':
         tickets = tickets = Ticket.objects.filter(status=1)
     if str(request.user.groups.all()[0]) == 'operator':
-        tickets = request.user.operator.ticket_set.filter(status=1)
+        tickets = request.user.ticket_operator.ticket_set.filter(status=1)
     dic = {
         'tickets': tickets,
     }
@@ -374,7 +388,7 @@ def reopenticketslist(request):
     if str(request.user.groups.all()[0]) == 'admin':
         tickets = tickets = Ticket.objects.filter(status=2)
     if str(request.user.groups.all()[0]) == 'operator':
-        tickets = request.user.operator.ticket_set.filter(status=2)
+        tickets = request.user.ticket_operator.ticket_set.filter(status=2)
     dic = {
         'tickets': tickets,
     }
@@ -386,7 +400,7 @@ def resolvedticketslist(request):
     if str(request.user.groups.all()[0]) == 'admin':
         tickets = tickets = Ticket.objects.filter(status=3)
     if str(request.user.groups.all()[0]) == 'operator':
-        tickets = request.user.operator.ticket_set.filter(status=3)
+        tickets = request.user.ticket_operator.ticket_set.filter(status=3)
     dic = {
         'tickets': tickets,
     }
@@ -398,7 +412,7 @@ def closeticketslist(request):
     if str(request.user.groups.all()[0]) == 'admin':
         tickets = tickets = Ticket.objects.filter(status=4)
     if str(request.user.groups.all()[0]) == 'operator':
-        tickets = request.user.operator.ticket_set.filter(status=4)
+        tickets = request.user.ticket_operator.ticket_set.filter(status=4)
     dic = {
         'tickets': tickets,
     }
@@ -407,8 +421,14 @@ def closeticketslist(request):
 
 @login_required(login_url='login')
 def generate_ticket_all_pdf(request):
-    tickets = Ticket.objects.all()
-    html = render_to_string('ticket/PDFs/ticketsPDF.html',{'tickets':tickets})
+    if str(request.user.groups.all()[0]) == 'admin':
+        tickets_object = Ticket.objects.all()
+    if str(request.user.groups.all()[0]) == 'operator':
+        tickets_object = request.user.ticket_operator.ticket_set.all()
+    current_date = datetime.date.today()
+    first_name = request.user.first_name
+    last_name =request.user.last_name 
+    html = render_to_string('ticket/PDFs/ticketPDF.html',{'tickets':tickets_object,'current_date':current_date,'first_name':first_name,'last_name':last_name})
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition']=f'filename=tickets.pdf'
     weasyprint.HTML(string=html).write_pdf(response,stylesheets=[weasyprint.CSS(settings.STATIC_ROOT/'css/pdf.css')])
