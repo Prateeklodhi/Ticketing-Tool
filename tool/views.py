@@ -301,8 +301,7 @@ def index(request):
         ticket_reopened = tickets.filter(status=2).count()
         ticket_resolved = tickets.filter(status=3).count()
         ticket_closed = tickets.filter(status=4).count()
-    else:
-        print('wrong')
+  
     nidan_tickets = NidanTicket.objects.all().count()
     nidan_pending = NidanTicket.objects.filter(status='pending').count()
     nidan_solved = NidanTicket.objects.filter(status='solved').count()
